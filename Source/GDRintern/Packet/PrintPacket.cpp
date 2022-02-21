@@ -42,14 +42,6 @@ APrintPacket::APrintPacket()
 	ActiveStateText->SetWorldScale3D(FVector(1.f, 2.5f, 2.5f));
 	ActiveStateText->SetText(FText::Format(LOCTEXT("ScoreFmt", "c: {0}"), FText::AsNumber(3)));
 	ActiveStateText->SetupAttachment(DummyRoot);
-
-	packetsize = 0;
-	packettype = 0;
-
-	ServerAddress = TEXT("192.168.206.126");
-	ServerPort = 8989;
-
-	ptest = nullptr;
 }
 
 APrintPacket::~APrintPacket()
@@ -86,62 +78,10 @@ void APrintPacket::UpdateText()
 	//	FText::FromString(FString(to_string(pCClient.Instance().GetBallPlace())))));
 }
 
-void APrintPacket::ChangeData()
-{
-
-}
-
-void APrintPacket::ConnectServer()
-{
-	sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
-
-	int32 port = 8989;
-	FIPv4Address ip;
-	FIPv4Address::Parse(ServerAddress, ip);
-
-	TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr(ip.Value, port);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Trying to connect.")));
-
-	bool connected = sSocket->Connect(*addr);
-
-}
-
-void APrintPacket::ClientRecv()
-{
-	Packet pt;
-	uint8* recvdata{ (uint8*)FMemory::Malloc(sizeof(Packet)) };
-	int32 Read{ sizeof(Packet) };
-	
-	sSocket->Recv(recvdata, sizeof(Packet), Read);
-
-	FMemory::Memmove(&pt, recvdata, sizeof(Packet));
-
-	FMemory::Free(recvdata);
-
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		FString::Printf(TEXT("Input Value : packettype : %d, packetsize : %d"),
-			(unsigned int)pt.GetType(), (unsigned int)pt.GetSize()), true, FVector2D{ 2.f, 2.f });
-}
-
 void APrintPacket::MakeThread()
 {
-	
 	FRunnableThread::Create(&tThread, TEXT("Create TestThread"));
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Wait.")));
-	ConnectServer();
-	//tThread = 
-	//tThread->Init();
-	//SendThread->
-	//void StopListening()
-	//{
-	//	if (Thread != nullptr) {
-	//		// Ask your thread to stop somehow
-	//		Thread->WaitForCompletion();
-	//		delete Thread;
-	//		Thread = nullptr;
-	//	}
-	//}
 }
 
 void APrintPacket::KillThread()
