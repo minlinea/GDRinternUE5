@@ -24,12 +24,14 @@ class GDRINTERN_API TestThread : public FRunnable
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 m_iServerPort;
 
+
 public:
 	TestThread();
 	~TestThread();
 
 	bool ConnectServer();
-	void ClientRecv();
+	bool ClientRecv(uint8* buf, int size);
+	void ReadAddData(Packet& pt);
 
 	virtual bool Init();
 	virtual uint32 Run();
