@@ -45,23 +45,28 @@ APrintPacket::APrintPacket()
 
 	packetsize = 0;
 	packettype = 0;
+
+	ServerAddress = TEXT("192.168.206.126");
+	ServerPort = 8989;
+
+	ptest = nullptr;
 }
 
+APrintPacket::~APrintPacket()
+{
+	tThread.Stop();
+}
 // Called when the game starts or when spawned
 void APrintPacket::BeginPlay()
 {
 	Super::BeginPlay();
-	ConnectServer();
-	//pCClient.ClientInit();
-	//pCClient.ClientConnect();
+	//ConnectServer();
 }
 
 // Called every frame
 void APrintPacket::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//UE_LOG(LogTemp, Display, TEXT("%s"), *FString(to_string(pCClient.GetBallPlace())));
 
 	//UpdateText();
 }
@@ -83,18 +88,16 @@ void APrintPacket::UpdateText()
 
 void APrintPacket::ChangeData()
 {
-	//pCClient.Instance().SetActiveState(false);
-	//pCClient.Instance().SetBallPlace(BALLPLACE::OB);
+
 }
 
 void APrintPacket::ConnectServer()
 {
 	sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 
-	FString address = TEXT("192.168.245.130");
 	int32 port = 8989;
 	FIPv4Address ip;
-	FIPv4Address::Parse(address, ip);
+	FIPv4Address::Parse(ServerAddress, ip);
 
 	TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr(ip.Value, port);
 
@@ -106,47 +109,44 @@ void APrintPacket::ConnectServer()
 
 void APrintPacket::ClientRecv()
 {
-	uint8* recvdata;
-	recvdata = (uint8*)FMemory::Malloc(8);
-	uint32 Size = 8;
-	int Read = 0;
-	sSocket->Recv(recvdata, 8, Read);
-
 	Packet pt;
-	FMemory::Memmove(&pt, recvdata, 8);
+	uint8* recvdata{ (uint8*)FMemory::Malloc(sizeof(Packet)) };
+	int32 Read{ sizeof(Packet) };
+	
+	sSocket->Recv(recvdata, sizeof(Packet), Read);
+
+	FMemory::Memmove(&pt, recvdata, sizeof(Packet));
 
 	FMemory::Free(recvdata);
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
 		FString::Printf(TEXT("Input Value : packettype : %d, packetsize : %d"),
-			(unsigned int)pt.GetType(), (unsigned int)pt.GetSize()));
-	//test
+			(unsigned int)pt.GetType(), (unsigned int)pt.GetSize()), true, FVector2D{ 2.f, 2.f });
 }
 
+void APrintPacket::MakeThread()
+{
+	
+	FRunnableThread::Create(&tThread, TEXT("Create TestThread"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Wait.")));
+	ConnectServer();
+	//tThread = 
+	//tThread->Init();
+	//SendThread->
+	//void StopListening()
+	//{
+	//	if (Thread != nullptr) {
+	//		// Ask your thread to stop somehow
+	//		Thread->WaitForCompletion();
+	//		delete Thread;
+	//		Thread = nullptr;
+	//	}
+	//}
+}
+
+void APrintPacket::KillThread()
+{
+	tThread.Stop();
+}
 #undef LOCTEXT_NAMESPACE
 
-//쓰레드 사용관련
-//FThread::FThread(threadname, ConnectServer);
-//FRunnableThread* Thread
-//satic FSocketListenThread* Instance;
-/*FRunnableThread* tThread;
-
-tThread->Create((FRunnable*)tThread, TEXT("FSocketListenThreadRunnable"));
-tThread->WaitForCompletion();*/
-
-//bool StartListening()
-//{
-//	if (Thread != nullptr) return false; //Already running
-//	Thread = FRunnableThread::Create(this, TEXT("FSocketListenThread"), FSocketListenThread::ThreadStackSize, TPri_AboveNormal);
-//	return (Thread != nullptr)
-//}
-
-//void StopListening()
-//{
-//	if (Thread != nullptr) {
-//		// Ask your thread to stop somehow
-//		Thread->WaitForCompletion();
-//		delete Thread;
-//		Thread = nullptr;
-//	}
-//}
