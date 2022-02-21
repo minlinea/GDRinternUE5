@@ -204,7 +204,7 @@ public:
 	}
 
 	//size 변경 시(data 전달 시 사용)
-	void SetSize(const unsigned int& _size)
+	void SetSize(const int& _size)
 	{
 		this->size = _size;
 	}
@@ -213,14 +213,14 @@ public:
 	{
 		return this->type;
 	}
-	unsigned int& GetSize()
+	int& GetSize()
 	{
 		return this->size;
 	}
 
 protected:
 	PACKETTYPE type;
-	unsigned int size;
+	int size;
 };
 
 class PacketShotData : public Packet

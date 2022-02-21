@@ -6,14 +6,14 @@
 TestThread::TestThread()
 {
 	this->m_bRun = false;
-
-	this->m_sServerAddress = TEXT("192.168.245.130");
-	this->m_iServerPort = 8989;
 	this->m_sSocket = nullptr;
-	
-	this->m_eBallPlace = BALLPLACE::TEE;
-	this->m_bActiveState = false;
-	this->m_sdShotData = ShotData{ 0,0,0,0,0,0,0 };
+}
+
+
+TestThread::TestThread(FSocket* socket)
+{
+	this->m_bRun = false;
+	this->m_sSocket = socket;
 }
 
 TestThread::~TestThread()
@@ -23,43 +23,27 @@ TestThread::~TestThread()
 
 bool TestThread::Init()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		FString::Printf(TEXT("TestThread Init")), true, FVector2D{ 2.f, 2.f });
+	this->m_bRun = true;
 
-	if (true == ConnectServer())
-	{
-		this->m_bRun = true;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connect OK")), true, FVector2D{ 2.f, 2.f });
-		return true;
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-			FString::Printf(TEXT("Connect Fail")), true, FVector2D{ 2.f, 2.f });
-		return false;
-	}
+	return true;
 }
+
 uint32 TestThread::Run()
 {
 	Packet pt;
 	while (this->m_bRun)
 	{
 		FMemory::Memzero(pt);
-		//uint8* recvdata{ (uint8*)FMemory::Malloc(sizeof(Packet)) };
-
 		if (true == this->ClientRecv(&pt, PACKETHEADER))
 		{
-			//FMemory::Memmove(&pt, recvdata, sizeof(Packet));
-
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-				FString::Printf(TEXT("Input Value : packettype : %d, packetsize : %d"),
-					(unsigned int)pt.GetType(), (unsigned int)pt.GetSize()), true, FVector2D{ 2.f, 2.f });
-
 			if (PACKETHEADER != pt.GetSize())
 			{
 				ReadAddData(pt);
 			}
-
+			else
+			{
+				SendPacket<Packet>(pt.GetType());
+			}
 		}
 		else
 		{
@@ -68,7 +52,6 @@ uint32 TestThread::Run()
 
 			this->m_bRun = false;
 		}
-		//FMemory::Free(recvdata);
 	}
 	return 0;
 }
@@ -81,59 +64,41 @@ void TestThread::Stop()
 	this->m_bRun = false;
 }
 
-bool TestThread::ConnectServer()
+template <class P, class PACKETDATA>
+void TestThread::SendPacket(PACKETDATA data)
 {
-	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
-
-	FIPv4Address ip;
-	FIPv4Address::Parse(m_sServerAddress, ip);
-
-	TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr(ip.Value, m_iServerPort);
-
-	return m_sSocket->Connect(*addr);
+	m_qPacket.push(new P(data));
 }
+
 
 void TestThread::ReadAddData(Packet& packet)
 {
-	unsigned int recvsize{ packet.GetSize() - PACKETHEADER };
+	size_t recvsize{ packet.GetSize() - PACKETHEADER };
 	uint8* recvdata{ (uint8*)FMemory::Malloc(recvsize) };
-
 	if (true == this->ClientRecv(recvdata, recvsize))
 	{
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
-			this->SetBallPlace(recvdata);
-
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-				FString::Printf(TEXT("BallPlace : %s"), *FString(to_string(m_eBallPlace))), true, FVector2D{ 2.f, 2.f });
-			//Server.SetClubSetting(recvdata);
-
-			//Server.SendPacket<Packet>(PACKETTYPE::PT_ClubSettingRecv);
+			BALLPLACE data;
+			FMemory::Memmove(&data, recvdata, sizeof(BALLPLACE));
+			SendPacket<PacketBallPlace>(data);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
-			this->SetShotData(recvdata);
-
-			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-			//	FString::Printf(TEXT("BallPlace : %s"), FString(to_string(temp))), true, FVector2D{ 2.f, 2.f });
-			//Server.SetTeeSetting(recvdata);
-
-			//Server.SendPacket<Packet>(PACKETTYPE::PT_TeeSettingRecv);
+			ShotData data;
+			FMemory::Memmove(&data, recvdata, sizeof(ShotData));
+			SendPacket<PacketShotData>(data);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
-			this->SetActiveState(recvdata);
-
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-				FString::Printf(TEXT("ActiveState : %s"), *FString(to_string(m_bActiveState))), true, FVector2D{ 2.f, 2.f });
-			//Server.SetActiveState(recvdata);
-		
-			//Server.SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
+			bool data;
+			FMemory::Memmove(&data, recvdata, sizeof(bool));
+			SendPacket<PacketActiveState>(data);
 		}
 		else
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-				FString::Printf(TEXT("ReadAddData recv unknwon type")), true, FVector2D{ 2.f, 2.f });
+				FString::Printf(TEXT("ReadAddData unknown type")), true, FVector2D{ 2.f, 2.f });
 		}
 	}
 	else
