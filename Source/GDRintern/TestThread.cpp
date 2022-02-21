@@ -6,10 +6,14 @@
 TestThread::TestThread()
 {
 	this->m_bRun = false;
+
 	this->m_sServerAddress = TEXT("192.168.245.130");
 	this->m_iServerPort = 8989;
 	this->m_sSocket = nullptr;
-
+	
+	this->m_eBallPlace = BALLPLACE::TEE;
+	this->m_bActiveState = false;
+	this->m_sdShotData = ShotData{ 0,0,0,0,0,0,0 };
 }
 
 TestThread::~TestThread()
@@ -41,11 +45,11 @@ uint32 TestThread::Run()
 	while (this->m_bRun)
 	{
 		FMemory::Memzero(pt);
-		uint8* recvdata{ (uint8*)FMemory::Malloc(sizeof(Packet)) };
+		//uint8* recvdata{ (uint8*)FMemory::Malloc(sizeof(Packet)) };
 
-		if (true == this->ClientRecv(recvdata, PACKETHEADER))
+		if (true == this->ClientRecv(&pt, PACKETHEADER))
 		{
-			FMemory::Memmove(&pt, recvdata, sizeof(Packet));
+			//FMemory::Memmove(&pt, recvdata, sizeof(Packet));
 
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
 				FString::Printf(TEXT("Input Value : packettype : %d, packetsize : %d"),
@@ -64,7 +68,7 @@ uint32 TestThread::Run()
 
 			this->m_bRun = false;
 		}
-		FMemory::Free(recvdata);
+		//FMemory::Free(recvdata);
 	}
 	return 0;
 }
@@ -91,26 +95,24 @@ bool TestThread::ConnectServer()
 
 void TestThread::ReadAddData(Packet& packet)
 {
-	uint8* recvdata{ (uint8*)FMemory::Malloc(sizeof(Packet)) };
 	unsigned int recvsize{ packet.GetSize() - PACKETHEADER };
+	uint8* recvdata{ (uint8*)FMemory::Malloc(recvsize) };
 
 	if (true == this->ClientRecv(recvdata, recvsize))
 	{
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
-			BALLPLACE temp;
-			FMemory::Memmove(&temp, recvdata, sizeof(BALLPLACE));
+			this->SetBallPlace(recvdata);
 
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-				FString::Printf(TEXT("BallPlace : %s"), *FString(to_string(temp))), true, FVector2D{ 2.f, 2.f });
+				FString::Printf(TEXT("BallPlace : %s"), *FString(to_string(m_eBallPlace))), true, FVector2D{ 2.f, 2.f });
 			//Server.SetClubSetting(recvdata);
 
 			//Server.SendPacket<Packet>(PACKETTYPE::PT_ClubSettingRecv);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
-			ShotData temp;
-			FMemory::Memmove(&temp, recvdata, sizeof(ShotData));
+			this->SetShotData(recvdata);
 
 			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
 			//	FString::Printf(TEXT("BallPlace : %s"), FString(to_string(temp))), true, FVector2D{ 2.f, 2.f });
@@ -120,11 +122,10 @@ void TestThread::ReadAddData(Packet& packet)
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
-			bool temp = false;
-			FMemory::Memmove(&packet, recvdata, sizeof(bool));
+			this->SetActiveState(recvdata);
 
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-				FString::Printf(TEXT("ActiveState : %s"), *FString(to_string(temp))), true, FVector2D{ 2.f, 2.f });
+				FString::Printf(TEXT("ActiveState : %s"), *FString(to_string(m_bActiveState))), true, FVector2D{ 2.f, 2.f });
 			//Server.SetActiveState(recvdata);
 		
 			//Server.SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
@@ -145,7 +146,7 @@ void TestThread::ReadAddData(Packet& packet)
 	FMemory::Free(recvdata);
 }
 
-bool TestThread::ClientRecv(uint8* buf, int size)
+bool TestThread::ClientRecv(void* buf, int size)
 {
-	return this->m_sSocket->Recv(buf, size, size);
+	return this->m_sSocket->Recv((uint8*)buf, size, size);
 }
