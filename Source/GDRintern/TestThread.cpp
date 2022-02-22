@@ -18,7 +18,18 @@ TestThread::TestThread(FSocket* socket)
 
 TestThread::~TestThread()
 {
-
+	if (0 != this->m_qPacket.size())
+	{
+		if (true != this->m_qPacket.empty())
+		{
+			for (auto p = this->m_qPacket.front(); true != this->m_qPacket.empty(); )
+			{
+				p = this->m_qPacket.front();
+				delete p;
+				this->m_qPacket.pop();
+			}
+		}
+	}
 }
 
 bool TestThread::Init()

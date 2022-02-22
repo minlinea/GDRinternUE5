@@ -32,7 +32,7 @@ class GDRINTERN_API APrintPacket : public AActor
 	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UTextRenderComponent* ActiveStateText;
 
-	TestThread* tThread;
+	TestThread* m_tThread;
 
 	bool m_bActiveState;
 	BALLPLACE m_eBallPlace;
@@ -55,14 +55,16 @@ public:
 	void MakeThread();
 
 	UFUNCTION(BlueprintCallable)
-	void KillThread();
-
-	UFUNCTION(BlueprintCallable)
 	void UpdateText();
 
 	UFUNCTION(BlueprintCallable)
 	void ConnectServer();
+
+	UFUNCTION(BlueprintCallable)
+	void Disconnect();
+
 	void CheckQueue();
+	void ManageData(Packet* pt);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
