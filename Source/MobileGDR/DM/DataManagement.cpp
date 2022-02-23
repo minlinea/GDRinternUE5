@@ -100,8 +100,6 @@ void ADataManagement::ConnectServer()
 
 	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 
-	//if (SCS_NotConnected == this->m_sSocket->GetConnectionState())		//모바일 빌드 시에 통과가 되지 않음
-	//{
 	FIPv4Address ip;
 	FIPv4Address::Parse(this->m_sServerAddress, ip);
 
@@ -120,11 +118,15 @@ void ADataManagement::ConnectServer()
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
 			FString::Printf(TEXT("Connect Fail")), true, FVector2D{ 2.f, 2.f });
 	}
-	//}
 }
 
 void ADataManagement::DisconnectServer()
 {
+	if (nullptr != this->m_sSocket)
+	{
+		this->m_sSocket->Close();
+	}
+
 	if (nullptr != this->m_tSend)
 	{
 		this->m_tSend->Stop();
@@ -133,14 +135,6 @@ void ADataManagement::DisconnectServer()
 	if (nullptr != this->m_tRecv)
 	{
 		this->m_tRecv->Stop();
-	}
-
-	if (nullptr != this->m_sSocket)
-	{
-		if (SCS_Connected == this->m_sSocket->GetConnectionState())
-		{
-			this->m_sSocket->Close();
-		}
 	}
 }
 

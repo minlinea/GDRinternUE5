@@ -57,6 +57,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SendActiveState();
 
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -141,5 +142,60 @@ public:
 	const bool GetActiveState()
 	{
 		return this->m_bActiveState;
+	}
+
+	UFUNCTION(BlueprintCallable)
+	void SetClubSetting(const FString& club)
+	{
+		if (FString(to_string(CLUBSETTING::DRIVER)) == club)
+		{
+			this->m_eClub = CLUBSETTING::DRIVER;
+		}
+		else if (FString(to_string(CLUBSETTING::WOOD)) == club)
+		{
+			this->m_eClub = CLUBSETTING::WOOD;
+		}
+		else if (FString(to_string(CLUBSETTING::IRON)) == club)
+		{
+			this->m_eClub = CLUBSETTING::IRON;
+		}
+	}
+
+	UFUNCTION(BlueprintCallable)
+	void SetTeeSetting(const FString& tee)
+	{
+		if (FString(to_string(TEESETTING::T30)) == tee)
+		{
+			this->m_eTee = TEESETTING::T30;
+		}
+		else if (FString(to_string(TEESETTING::T35)) == tee)
+		{
+			this->m_eTee = TEESETTING::T35;
+		}
+		else if (FString(to_string(TEESETTING::T40)) == tee)
+		{
+			this->m_eTee = TEESETTING::T40;
+		}
+		else if (FString(to_string(TEESETTING::T45)) == tee)
+		{
+			this->m_eTee = TEESETTING::T45;
+		}
+		else if (FString(to_string(TEESETTING::T50)) == tee)
+		{
+			this->m_eTee = TEESETTING::T50;
+		}
+	}
+
+	UFUNCTION(BlueprintCallable)
+	void SetActiveState(const FString& tf)
+	{
+		if (FString("True") == tf)
+		{
+			this->m_bActiveState = true;
+		}
+		else if (FString("False") == tf)
+		{
+			this->m_bActiveState = false;
+		}
 	}
 };
