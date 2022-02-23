@@ -144,6 +144,60 @@ public:
 		return this->m_bActiveState;
 	}
 
+
+	UFUNCTION(BlueprintCallable)
+	const FString GetFStringTeeSetting()
+	{
+		return FString(to_string(this->m_eTee));
+	}
+	UFUNCTION(BlueprintCallable)
+	const FString GetFStringClubSetting()
+	{
+		return FString(to_string(this->m_eClub));
+	}
+	UFUNCTION(BlueprintCallable)
+	const FString GetFStringActiveState()
+	{
+		return FString(to_string(this->m_bActiveState));
+	}
+	UFUNCTION(BlueprintCallable)
+	const FString GetFStringBallPlace()
+	{
+		return FString(to_string(this->m_eBallPlace));
+	}
+
+	UFUNCTION(BlueprintCallable)
+	const float GetFStringBallSpeed()
+	{
+		return this->m_sdShotData.ballspeed;
+	}
+	UFUNCTION(BlueprintCallable)
+	const float GetFStringLaunchAngle()
+	{
+		return this->m_sdShotData.launchangle;
+	}
+	UFUNCTION(BlueprintCallable)
+	const float GetFStringLaunchDirection()
+	{
+		return this->m_sdShotData.launchdirection;
+	}
+	UFUNCTION(BlueprintCallable)
+	const float GetFStringHeadspeed()
+	{
+		return this->m_sdShotData.headspeed;
+	}
+	UFUNCTION(BlueprintCallable)
+	const int GetFStringBackSpin()
+	{
+		return this->m_sdShotData.backspin;
+	}
+	UFUNCTION(BlueprintCallable)
+	const int GetFStringSideSpin()
+	{
+		return this->m_sdShotData.sidespin;
+	}
+
+
 	UFUNCTION(BlueprintCallable)
 	void SetClubSetting(const FString& club)
 	{

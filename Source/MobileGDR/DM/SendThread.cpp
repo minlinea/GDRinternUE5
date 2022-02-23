@@ -41,8 +41,6 @@ bool SendThread::Init()
 uint32 SendThread::Run()
 {
 	Packet pt;
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		FString::Printf(TEXT("SendThread Run")), true, FVector2D{ 2.f, 2.f });
 	while (this->m_bRun)
 	{
 		if (true != this->m_qPacket.empty())
@@ -59,12 +57,6 @@ uint32 SendThread::Run()
 
 					this->m_bRun = false;
 					break;
-				}
-				else
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-						FString::Printf(TEXT("SendPacket : packettype : %s, packetsize : %d"),
-							*FString(to_string(packet->GetType())), (unsigned int)packet->GetSize()), true, FVector2D{ 2.f, 2.f });
 				}
 				delete packet;
 				queuepacket.pop();

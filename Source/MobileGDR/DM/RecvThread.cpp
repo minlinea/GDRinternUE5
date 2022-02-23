@@ -41,8 +41,6 @@ bool RecvThread::Init()
 uint32 RecvThread::Run()
 {
 	Packet pt;
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		FString::Printf(TEXT("RecvThread Run")), true, FVector2D{ 2.f, 2.f });
 	while (this->m_bRun)
 	{
 		FMemory::Memzero(pt);

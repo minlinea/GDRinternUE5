@@ -40,7 +40,6 @@ void ADataManagement::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	CheckQueue();
-	//UpdateText();
 }
 
 //RecvThread에 담긴 큐 데이터 처리
@@ -56,10 +55,6 @@ void ADataManagement::CheckQueue()
 				packet = packetqueue.front();
 
 				ManageData(packet);
-
-				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-					FString::Printf(TEXT("Input Value : packettype : %s, packetsize : %d"),
-						*FString(to_string(packet->GetType())), (unsigned int)packet->GetSize()), true, FVector2D{ 2.f, 2.f });
 
 				delete packet;
 				packetqueue.pop();
@@ -95,9 +90,6 @@ void ADataManagement::ManageData(Packet* pt)
 
 void ADataManagement::ConnectServer()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		FString::Printf(TEXT("ConnectServer")), true, FVector2D{ 2.f, 2.f });
-
 	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 
 	FIPv4Address ip;
