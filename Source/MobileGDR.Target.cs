@@ -3,12 +3,12 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class GDRinternTarget : TargetRules
+public class MobileGDRTarget : TargetRules
 {
-    public GDRinternTarget(TargetInfo Target) : base(Target)
+	public MobileGDRTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("GDRintern");
+		ExtraModuleNames.AddRange( new string[] { "MobileGDR" } );
 	}
 }

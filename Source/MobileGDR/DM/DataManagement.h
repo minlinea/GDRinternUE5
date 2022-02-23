@@ -4,41 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "../TestThread.h"
+#include "InterfaceThread.h"
+#include "Packet.h"
+#include "RecvThread.h"
+#include "SendThread.h"
+#include "Interfaces\IPv4\IPv4Address.h"
 #include "SocketSubsystem.h"
-#include "C:\Program Files\Epic Games\UE_5.0EA\Engine\Source\Runtime\Networking\Public\Interfaces\IPv4\IPv4Address.h"
-#include "C:\Program Files\Epic Games\UE_5.0EA\Engine\Source\Runtime\Networking\Public\Interfaces\IPv4\IPv4SubnetMask.h"
-#include "PrintPacket.generated.h"
-
+#include "DataManagement.generated.h"
 
 UCLASS()
-class GDRINTERN_API APrintPacket : public AActor
+class MOBILEGDR_API ADataManagement : public AActor
 {
 	GENERATED_BODY()
 	
-	/** Dummy root component */
-	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class USceneComponent* DummyRoot;
-
-	/** Text component for the score */
-	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UTextRenderComponent* BallPlaceText;
-
-	/** Text component for the score */
-	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UTextRenderComponent* ShotDataText;
-
-	/** Text component for the score */
-	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UTextRenderComponent* ActiveStateText;
-
-	TestThread* m_tThread;
-
-	bool m_bActiveState;
-	BALLPLACE m_eBallPlace;
-	ShotData m_sdShotData;
-	TEESETTING m_eTee;
-	CLUBSETTING m_eClub;
+private:
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FString m_sServerAddress;
@@ -46,25 +25,37 @@ class GDRINTERN_API APrintPacket : public AActor
 	int32 m_iServerPort;
 	FSocket* m_sSocket;
 
+	SendThread* m_tSend;
+	RecvThread* m_tRecv;
+
+	bool m_bActiveState;
+	BALLPLACE m_eBallPlace;
+	ShotData m_sdShotData;
+	TEESETTING m_eTee;
+	CLUBSETTING m_eClub;
+
 public:	
 	// Sets default values for this actor's properties
-	APrintPacket();
-	~APrintPacket();
+	ADataManagement();
+	~ADataManagement();
+	/*
+	* socket 생성, ip parsing, connect
+	* 현재 모바일 빌드 시에 SCS_NotConnected가 통과되지 않는 문제가 있음
+	*/
+	UFUNCTION(BlueprintCallable)
+	void ConnectServer();		
 
 	UFUNCTION(BlueprintCallable)
+	void DisconnectServer();
+
+	/*
+	* 서버 연결 이후 Send, Recv 스레드 생성
+	* Send : SendThread / Recv : RecvThread
+	*/
 	void MakeThread();
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateText();
-
-	UFUNCTION(BlueprintCallable)
-	void ConnectServer();
-
-	UFUNCTION(BlueprintCallable)
-	void Disconnect();
-
 	void CheckQueue();
 	void ManageData(Packet* pt);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -74,6 +65,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
+	template <class P, class PACKETDATA>
+	void SendPacket(PACKETDATA data);
+		
+	
 	void SetShotData(const ShotData& sd)
 	{
 		this->m_sdShotData = sd;
@@ -136,6 +131,4 @@ public:
 	{
 		return this->m_bActiveState;
 	}
-
-
 };

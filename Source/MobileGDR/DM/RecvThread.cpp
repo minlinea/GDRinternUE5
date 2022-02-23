@@ -1,22 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TestThread.h"
+#include "RecvThread.h"
 
-TestThread::TestThread()
+RecvThread::RecvThread()
 {
 	this->m_bRun = false;
 	this->m_sSocket = nullptr;
 }
 
-
-TestThread::TestThread(FSocket* socket)
+RecvThread::RecvThread(FSocket *socket)
 {
 	this->m_bRun = false;
 	this->m_sSocket = socket;
 }
 
-TestThread::~TestThread()
+RecvThread::~RecvThread()
 {
 	if (0 != this->m_qPacket.size())
 	{
@@ -32,16 +31,18 @@ TestThread::~TestThread()
 	}
 }
 
-bool TestThread::Init()
+bool RecvThread::Init()
 {
 	this->m_bRun = true;
 
 	return true;
-}
+};
 
-uint32 TestThread::Run()
+uint32 RecvThread::Run()
 {
 	Packet pt;
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+		FString::Printf(TEXT("RecvThread Run")), true, FVector2D{ 2.f, 2.f });
 	while (this->m_bRun)
 	{
 		FMemory::Memzero(pt);
@@ -53,36 +54,21 @@ uint32 TestThread::Run()
 			}
 			else
 			{
-				SendPacket<Packet>(pt.GetType());
+				SavePacket<Packet>(pt.GetType());
 			}
 		}
 		else
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-				FString::Printf(TEXT("Run no data Recv Error")), true, FVector2D{ 2.f, 2.f });
+				FString::Printf(TEXT("Error RecvThread Run no data Recv")), true, FVector2D{ 2.f, 2.f });
 
 			this->m_bRun = false;
 		}
 	}
 	return 0;
 }
-void TestThread::Exit()
-{
-	this->Stop();
-}
-void TestThread::Stop()
-{
-	this->m_bRun = false;
-}
 
-template <class P, class PACKETDATA>
-void TestThread::SendPacket(PACKETDATA data)
-{
-	m_qPacket.push(new P(data));
-}
-
-
-void TestThread::ReadAddData(Packet& packet)
+void RecvThread::ReadAddData(Packet& packet)
 {
 	size_t recvsize{ packet.GetSize() - PACKETHEADER };
 	uint8* recvdata{ (uint8*)FMemory::Malloc(recvsize) };
@@ -92,19 +78,19 @@ void TestThread::ReadAddData(Packet& packet)
 		{
 			BALLPLACE data;
 			FMemory::Memmove(&data, recvdata, sizeof(BALLPLACE));
-			SendPacket<PacketBallPlace>(data);
+			SavePacket<PacketBallPlace>(data);
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
 			ShotData data;
 			FMemory::Memmove(&data, recvdata, sizeof(ShotData));
-			SendPacket<PacketShotData>(data);
+			SavePacket<PacketShotData>(data);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{
 			bool data;
 			FMemory::Memmove(&data, recvdata, sizeof(bool));
-			SendPacket<PacketActiveState>(data);
+			SavePacket<PacketActiveState>(data);
 		}
 		else
 		{
@@ -122,7 +108,23 @@ void TestThread::ReadAddData(Packet& packet)
 	FMemory::Free(recvdata);
 }
 
-bool TestThread::ClientRecv(void* buf, int size)
+void RecvThread::Exit()
+{
+	this->Stop();
+}
+
+void RecvThread::Stop()
+{
+	this->m_bRun = false;
+}
+
+bool RecvThread::ClientRecv(void* buf, int size)
 {
 	return this->m_sSocket->Recv((uint8*)buf, size, size);
+}
+
+template <class P, class PACKETDATA>
+void RecvThread::SavePacket(PACKETDATA data)
+{
+	this->m_qPacket.push(new P(data));
 }

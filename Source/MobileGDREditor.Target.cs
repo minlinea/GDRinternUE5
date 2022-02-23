@@ -3,12 +3,12 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class GDRinternEditorTarget : TargetRules
+public class MobileGDREditorTarget : TargetRules
 {
-    public GDRinternEditorTarget(TargetInfo Target) : base(Target)
+	public MobileGDREditorTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("GDRintern");
+		ExtraModuleNames.AddRange( new string[] { "MobileGDR" } );
 	}
 }
