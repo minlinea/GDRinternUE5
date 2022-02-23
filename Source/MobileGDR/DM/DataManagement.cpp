@@ -164,3 +164,16 @@ void ADataManagement::SendPacket(PACKETDATA data)
 {
 	this->m_tSend->GetQueue().push(new P(data));
 }
+
+void ADataManagement::SendClubSetting()
+{
+	SendPacket<PacketClubSetting>(m_eClub);
+}
+void ADataManagement::SendTeeSetting()
+{
+	SendPacket<PacketTeeSetting>(m_eTee);
+}
+void ADataManagement::SendActiveState()
+{
+	SendPacket<PacketActiveState>(m_bActiveState);
+}

@@ -48,13 +48,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DisconnectServer();
 
-	/*
-	* 서버 연결 이후 Send, Recv 스레드 생성
-	* Send : SendThread / Recv : RecvThread
-	*/
-	void MakeThread();
-	void CheckQueue();
-	void ManageData(Packet* pt);
+	UFUNCTION(BlueprintCallable)
+	void SendClubSetting();
+
+	UFUNCTION(BlueprintCallable)
+	void SendTeeSetting();
+
+	UFUNCTION(BlueprintCallable)
+	void SendActiveState();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -67,7 +69,16 @@ public:
 
 	template <class P, class PACKETDATA>
 	void SendPacket(PACKETDATA data);
-		
+	
+	/*
+	* 서버 연결 이후 Send, Recv 스레드 생성
+	* Send : SendThread / Recv : RecvThread
+	*/
+	void MakeThread();
+	void CheckQueue();
+	void ManageData(Packet* pt);
+
+
 	
 	void SetShotData(const ShotData& sd)
 	{
