@@ -17,8 +17,8 @@ ADataManagement::ADataManagement()
 	this->m_tRecv = nullptr;
 
 	this->m_bActiveState = false;
-	this->m_eBallPlace = BALLPLACE::OB;
-	this->m_sdShotData = ShotData{ 0,0,0,0,0,0,0 };
+	this->m_eBallPlace = BALLPLACE::OUTOFBOUND;
+	this->m_sdShotData = ShotDataInfo{ 0,0,0,0,0,0,0,0,0 };
 	this->m_eTee = TEESETTING::T30;
 	this->m_eClub = CLUBSETTING::DRIVER;
 }
@@ -74,7 +74,7 @@ void ADataManagement::ManageData(Packet* pt)
 	}
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
-		SetShotData(static_cast<PacketShotData*>(pt)->GetData());
+		SetShotData(static_cast<PacketShotDataInfo*>(pt)->GetData());
 		SendPacket<Packet>(PACKETTYPE::PT_ShotDataRecv);
 	}
 	else if (PACKETTYPE::PT_ActiveState == pt->GetType())

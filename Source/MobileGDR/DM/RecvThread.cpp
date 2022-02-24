@@ -80,9 +80,9 @@ void RecvThread::ReadAddData(Packet& packet)
 		}
 		else if (PACKETTYPE::PT_ShotData == packet.GetType())
 		{
-			ShotData data;
-			FMemory::Memmove(&data, recvdata, sizeof(ShotData));
-			SavePacket<PacketShotData>(data);
+			ShotDataInfo data;
+			FMemory::Memmove(&data, recvdata, sizeof(ShotDataInfo));
+			SavePacket<PacketShotDataInfo>(data);
 		}
 		else if (PACKETTYPE::PT_ActiveState == packet.GetType())
 		{

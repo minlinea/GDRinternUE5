@@ -30,7 +30,7 @@ private:
 
 	bool m_bActiveState;
 	BALLPLACE m_eBallPlace;
-	ShotData m_sdShotData;
+	ShotDataInfo m_sdShotData;
 	TEESETTING m_eTee;
 	CLUBSETTING m_eClub;
 
@@ -81,13 +81,13 @@ public:
 
 
 	
-	void SetShotData(const ShotData& sd)
+	void SetShotData(const ShotDataInfo& sd)
 	{
 		this->m_sdShotData = sd;
 	}
 	void SetShotData(uint8* sd)
 	{
-		FMemory::Memmove(&m_sdShotData, sd, sizeof(ShotData));
+		FMemory::Memmove(&m_sdShotData, sd, sizeof(ShotDataInfo));
 	}
 	void SetTeeSetting(const TEESETTING& tee)
 	{
@@ -131,7 +131,7 @@ public:
 	{
 		return this->m_eClub;
 	}
-	const ShotData GetShotData()
+	const ShotDataInfo GetShotData()
 	{
 		return this->m_sdShotData;
 	}
@@ -172,31 +172,40 @@ public:
 		return this->m_sdShotData.ballspeed;
 	}
 	UFUNCTION(BlueprintCallable)
-	const float GetFStringLaunchAngle()
+	const float GetFStringBallPitch()
 	{
-		return this->m_sdShotData.launchangle;
+		return this->m_sdShotData.ballpitch;
 	}
 	UFUNCTION(BlueprintCallable)
-	const float GetFStringLaunchDirection()
+	const float GetFStringBallYaw()
 	{
-		return this->m_sdShotData.launchdirection;
+		return this->m_sdShotData.ballyaw;
 	}
 	UFUNCTION(BlueprintCallable)
-	const float GetFStringHeadspeed()
+	const int GetFStringSpinBack()
 	{
-		return this->m_sdShotData.headspeed;
+		return this->m_sdShotData.spinback;
 	}
 	UFUNCTION(BlueprintCallable)
-	const int GetFStringBackSpin()
+	const int GetFStringSpinSide()
 	{
-		return this->m_sdShotData.backspin;
+		return this->m_sdShotData.spinside;
 	}
 	UFUNCTION(BlueprintCallable)
-	const int GetFStringSideSpin()
+	const float GetFStringClubSpeed()
 	{
-		return this->m_sdShotData.sidespin;
+		return this->m_sdShotData.clubspeed;
 	}
-
+	UFUNCTION(BlueprintCallable)
+	const float GetFStringClubPath()
+	{
+		return this->m_sdShotData.clubpath;
+	}
+	UFUNCTION(BlueprintCallable)
+	const float GetFStringClubFace()
+	{
+		return this->m_sdShotData.clubface;
+	}
 
 	UFUNCTION(BlueprintCallable)
 	void SetClubSetting(const FString& club)
@@ -205,20 +214,28 @@ public:
 		{
 			this->m_eClub = CLUBSETTING::DRIVER;
 		}
-		else if (FString(to_string(CLUBSETTING::WOOD)) == club)
-		{
-			this->m_eClub = CLUBSETTING::WOOD;
-		}
 		else if (FString(to_string(CLUBSETTING::IRON)) == club)
 		{
 			this->m_eClub = CLUBSETTING::IRON;
+		}
+		else if (FString(to_string(CLUBSETTING::WEDGE)) == club)
+		{
+			this->m_eClub = CLUBSETTING::WEDGE;
+		}
+		else if (FString(to_string(CLUBSETTING::PUTTER)) == club)
+		{
+			this->m_eClub = CLUBSETTING::PUTTER;
 		}
 	}
 
 	UFUNCTION(BlueprintCallable)
 	void SetTeeSetting(const FString& tee)
 	{
-		if (FString(to_string(TEESETTING::T30)) == tee)
+		if (FString(to_string(TEESETTING::T25)) == tee)
+		{
+			this->m_eTee = TEESETTING::T25;
+		}
+		else if (FString(to_string(TEESETTING::T30)) == tee)
 		{
 			this->m_eTee = TEESETTING::T30;
 		}
@@ -237,6 +254,14 @@ public:
 		else if (FString(to_string(TEESETTING::T50)) == tee)
 		{
 			this->m_eTee = TEESETTING::T50;
+		}
+		else if (FString(to_string(TEESETTING::T55)) == tee)
+		{
+			this->m_eTee = TEESETTING::T55;
+		}
+		else if (FString(to_string(TEESETTING::T60)) == tee)
+		{
+			this->m_eTee = TEESETTING::T60;
 		}
 	}
 

@@ -1,6 +1,6 @@
 #pragma once
-#include <iostream>
 
+#include <iostream>
 
 //////////////////////////////////////////////////////////////////////////////////
 // define
@@ -8,7 +8,6 @@
 #define SERVER_IP "192.168.206.126"
 #define PORT 8989
 #define PACKETHEADER sizeof(Packet)
-
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -20,78 +19,108 @@ inline const char* to_string(const bool& t)
 	if (true == t)	return "TRUE";
 	else			return "FALSE";
 }
+
 enum class TEESETTING {
+	T25,
 	T30,
 	T35,
 	T40,
 	T45,
-	T50
+	T50,
+	T55,
+	T60
 };
 inline std::ostream& operator << (std::ostream& os, const TEESETTING& t);
 inline std::ostream& operator << (std::ostream& os, const TEESETTING& t)
 {
-	if (TEESETTING::T30 == t)		std::cout << "T30";
+	if (TEESETTING::T25 == t)		std::cout << "T25";
+	else if (TEESETTING::T30 == t)	std::cout << "T30";
 	else if (TEESETTING::T35 == t)	std::cout << "T35";
 	else if (TEESETTING::T40 == t)	std::cout << "T40";
 	else if (TEESETTING::T45 == t)	std::cout << "T45";
 	else if (TEESETTING::T50 == t)	std::cout << "T50";
+	else if (TEESETTING::T55 == t)	std::cout << "T55";
+	else if (TEESETTING::T60 == t)	std::cout << "T60";
 	return os;
 }
 inline const char* to_string(const TEESETTING& t);
 inline const char* to_string(const TEESETTING& t)
 {
-	if (TEESETTING::T30 == t)		return "T30";
+	if (TEESETTING::T25 == t)		return "T25";
+	else if (TEESETTING::T30 == t)	return "T30";
 	else if (TEESETTING::T35 == t)	return "T35";
 	else if (TEESETTING::T40 == t)	return "T40";
 	else if (TEESETTING::T45 == t)	return "T45";
 	else if (TEESETTING::T50 == t)	return "T50";
+	else if (TEESETTING::T55 == t)	return "T55";
+	else if (TEESETTING::T60 == t)	return "T60";
 	return "NONE";
 }
 
 enum class CLUBSETTING {
 	DRIVER,
 	IRON,
-	WOOD
+	WEDGE,
+	PUTTER
 };
 inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t);
 inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t)
 {
 	if (CLUBSETTING::DRIVER == t)		std::cout << "DRIVER";
 	else if (CLUBSETTING::IRON == t)	std::cout << "IRON";
-	else if (CLUBSETTING::WOOD == t)	std::cout << "WOOD";
+	else if (CLUBSETTING::WEDGE == t)	std::cout << "WEDGE";
+	else if (CLUBSETTING::PUTTER == t)	std::cout << "PUTTER";
 	return os;
 }
 inline const char* to_string(const CLUBSETTING& t);
 inline const char* to_string(const CLUBSETTING& t)
 {
-	if (CLUBSETTING::DRIVER == t)		return "DRIVER";
+	if (CLUBSETTING::DRIVER == t)	return "DRIVER";
 	else if (CLUBSETTING::IRON == t)	return "IRON";
-	else if (CLUBSETTING::WOOD == t)	return "WOOD";
+	else if (CLUBSETTING::WEDGE == t)	return "WEDGE";
+	else if (CLUBSETTING::PUTTER == t)	return "PUTTER";
 	return "NONE";
 }
 
 enum class BALLPLACE
 {
-	PAIRWAY,
+	FAIRWAY,
+	ROUGH,
+	BUNKER,
 	TEE,
-	OB
+	GREEN,
+	WAIT,
+	SLEEP,
+	OUTOFBOUND
 };
 inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t);
 inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t)
 {
-	if (BALLPLACE::PAIRWAY == t)	std::cout << "PAIRWAY";
+	if (BALLPLACE::FAIRWAY == t)	std::cout << "PAIRWAY";
+	else if (BALLPLACE::ROUGH == t)	std::cout << "ROUGH";
+	else if (BALLPLACE::BUNKER == t)std::cout << "BUNKER";
 	else if (BALLPLACE::TEE == t)	std::cout << "TEE";
-	else if (BALLPLACE::OB == t)	std::cout << "OB";
+	else if (BALLPLACE::GREEN == t)	std::cout << "GREEN";
+	else if (BALLPLACE::WAIT == t)	std::cout << "WAIT";
+	else if (BALLPLACE::SLEEP == t)	std::cout << "SLEEP";
+	else if (BALLPLACE::OUTOFBOUND == t)	std::cout << "OUTOFBOUND";
 	return os;
 }
 inline const char* to_string(const BALLPLACE& t);
 inline const char* to_string(const BALLPLACE& t)
 {
-	if (BALLPLACE::PAIRWAY == t)	return "PAIRWAY";
-	else if (BALLPLACE::TEE == t)	return "TEE";
-	else if (BALLPLACE::OB == t)	return "OB";
+	if (BALLPLACE::FAIRWAY == t)		return "PAIRWAY";
+	else if (BALLPLACE::ROUGH == t)		return "ROUGH";
+	else if (BALLPLACE::BUNKER == t)	return "BUNKER";
+	else if (BALLPLACE::TEE == t)		return "TEE";
+	else if (BALLPLACE::GREEN == t)		return "GREEN";
+	else if (BALLPLACE::WAIT == t)		return "WAIT";
+	else if (BALLPLACE::SLEEP == t)		return "SLEEP";
+	else if (BALLPLACE::OUTOFBOUND == t)return "OUTOFBOUND";
 	return "NONE";
 }
+
+
 
 
 enum class PACKETTYPE {
@@ -151,30 +180,53 @@ inline const char* to_string(const PACKETTYPE& t)
 //////////////////////////////////////////////////////////////////////////////////
 // struct
 
-typedef struct _ShotData {
+typedef struct _ShotDataInfo {
 	int phase;
 	float ballspeed;
-	float launchangle;
-	float launchdirection;
-	float headspeed;
-	int backspin;
-	int sidespin;
-}ShotData;
-inline std::ostream& operator << (std::ostream& os, const ShotData& t);
-inline std::ostream& operator << (std::ostream& os, const ShotData& t)
-{
-	std::cout << "phase : " << t.phase << "\nballspeed : " << t.ballspeed
-		<< "  launchangle : " << t.launchangle << "  launchdirection : " << t.launchdirection
-		<< "\nheadspeed : " << t.headspeed << "  backspin : " << t.backspin << "  sidespin : " << t.sidespin;
-	return os;
-}
+	float ballpitch;
+	float ballyaw;
+	int spinback;
+	int spinside;
+	float clubspeed;
+	float clubpath;
+	float clubface;
+
+	//_ShotDataInfo()
+	//{
+	//	this->phase = 0;
+	//	this->ballspeed = 0.f;
+	//	this->ballpitch = 0.f;
+	//	this->ballyaw = 0.f;
+	//	this->spinback = 0;
+	//	this->spinside = 0;
+	//	this->clubspeed = 0.f;
+	//	this->clubpath = 0.f;
+	//	this->clubface = 0.f;
+	//}
+
+	//_ShotDataInfo(const _ShotDataInfo& sd)
+	//{
+	//	this->phase = sd.phase;
+	//	this->ballpitch = sd.ballpitch;
+	//	this->ballspeed = sd.ballspeed;
+	//	this->ballyaw = sd.ballyaw;
+	//	this->spinback = sd.spinback;
+	//	this->spinside = sd.spinside;
+	//	this->clubface = sd.clubface;
+	//	this->clubpath = sd.clubpath;
+	//	this->clubspeed = sd.clubspeed;
+	//}
+}ShotDataInfo;
+
+
+
 
 /*
 Packet
 type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분
 size : 해당 타입 패킷의 사이즈
 */
-#pragma pack(push, 1)
+
 class Packet
 {
 public:
@@ -186,9 +238,9 @@ public:
 	}
 
 	//type이 지정된 생성자(send응답(~~recv 패킷 사용))
-	Packet(const PACKETTYPE& _type)
+	Packet(const PACKETTYPE& type)
 	{
-		this->type = _type;
+		this->type = type;
 		this->size = PACKETHEADER;
 	}
 
@@ -204,7 +256,7 @@ public:
 	}
 
 	//size 변경 시(data 전달 시 사용)
-	void SetSize(const int& _size)
+	void SetSize(const unsigned int& _size)
 	{
 		this->size = _size;
 	}
@@ -213,45 +265,46 @@ public:
 	{
 		return this->type;
 	}
-	int& GetSize()
+	unsigned int& GetSize()
 	{
 		return this->size;
 	}
 
 protected:
 	PACKETTYPE type;
-	int size;
+	unsigned int size;
 };
 
-class PacketShotData : public Packet
+#pragma pack(push, 1)
+class PacketShotDataInfo : public Packet
 {
 public:
 
-	PacketShotData()
+	PacketShotDataInfo()
 	{
 		this->type = PACKETTYPE::PT_ShotData;
-		this->size = PACKETHEADER + sizeof(ShotData);
-		this->data = ShotData{};
+		this->size = PACKETHEADER + sizeof(ShotDataInfo);
+		this->data = ShotDataInfo{};
 	}
-	PacketShotData(const ShotData& _data)
+	PacketShotDataInfo(const ShotDataInfo& data)
 	{
 		this->type = PACKETTYPE::PT_ShotData;
-		this->size = PACKETHEADER + sizeof(ShotData);
-		this->data = _data;
+		this->size = PACKETHEADER + sizeof(ShotDataInfo);
+		this->data = data;
 	}
-	~PacketShotData() = default;
+	~PacketShotDataInfo() = default;
 
-	void SetData(const ShotData& _data)
+	void SetData(const ShotDataInfo& _data)
 	{
 		this->data = _data;
 	}
-	ShotData& GetData()
+	ShotDataInfo& GetData()
 	{
 		return this->data;
 	}
 
 private:
-	ShotData data;
+	ShotDataInfo data;
 };
 
 class PacketBallPlace : public Packet
@@ -262,13 +315,13 @@ public:
 	{
 		this->type = PACKETTYPE::PT_BallPlace;
 		this->size = PACKETHEADER + sizeof(BALLPLACE);
-		this->data = BALLPLACE::OB;
+		this->data = BALLPLACE::OUTOFBOUND;
 	}
-	PacketBallPlace(const BALLPLACE& _data)
+	PacketBallPlace(const BALLPLACE& data)
 	{
 		this->type = PACKETTYPE::PT_BallPlace;
 		this->size = PACKETHEADER + sizeof(BALLPLACE);
-		this->data = _data;
+		this->data = data;
 	}
 	~PacketBallPlace() = default;
 
@@ -295,11 +348,11 @@ public:
 		this->size = PACKETHEADER + sizeof(bool);
 		this->data = false;
 	}
-	PacketActiveState(const bool& _data)
+	PacketActiveState(const bool& data)
 	{
 		this->type = PACKETTYPE::PT_ActiveState;
 		this->size = PACKETHEADER + sizeof(bool);
-		this->data = _data;
+		this->data = data;
 	}
 	~PacketActiveState() = default;
 
@@ -326,11 +379,11 @@ public:
 		this->size = PACKETHEADER + sizeof(TEESETTING);
 		this->data = TEESETTING::T40;
 	}
-	PacketTeeSetting(const TEESETTING& _data)
+	PacketTeeSetting(const TEESETTING& data)
 	{
 		this->type = PACKETTYPE::PT_TeeSetting;
 		this->size = PACKETHEADER + sizeof(TEESETTING);
-		this->data = _data;
+		this->data = data;
 	}
 	~PacketTeeSetting() = default;
 
@@ -357,11 +410,11 @@ public:
 		this->size = PACKETHEADER + sizeof(CLUBSETTING);
 		this->data = CLUBSETTING::DRIVER;
 	}
-	PacketClubSetting(const CLUBSETTING& _data)
+	PacketClubSetting(const CLUBSETTING& data)
 	{
 		this->type = PACKETTYPE::PT_ClubSetting;
 		this->size = PACKETHEADER + sizeof(CLUBSETTING);
-		this->data = _data;
+		this->data = data;
 	}
 	~PacketClubSetting() = default;
 
