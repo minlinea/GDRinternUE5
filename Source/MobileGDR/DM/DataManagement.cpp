@@ -3,6 +3,7 @@
 
 #include "DataManagement.h"
 #include <vector>
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 ADataManagement::ADataManagement()
 {
@@ -15,12 +16,6 @@ ADataManagement::ADataManagement()
 
 	this->m_tSend = nullptr;
 	this->m_tRecv = nullptr;
-
-	this->m_bActiveState = false;
-	this->m_eBallPlace = BALLPLACE::OUTOFBOUND;
-	this->m_sdShotData = ShotDataInfo{ 0,0,0,0,0,0,0,0,0 };
-	this->m_eTee = TEESETTING::T30;
-	this->m_eClub = CLUBSETTING::DRIVER;
 }
 
 ADataManagement::~ADataManagement()
@@ -62,64 +57,32 @@ void ADataManagement::CheckQueue()
 			this->m_tRecv->SetQueue(packetqueue);
 		}
 	}
-	
-}
-
-void ADataManagement::CheckActiveState()
-{
-	if (CLUBSETTING::DRIVER == this->m_eClub)
-	{
-		if (BALLPLACE::TEE == this->m_eBallPlace)
-		{
-			this->m_bActiveState = true;
-		}
-		else
-		{
-			this->m_bActiveState = false;
-		}
-	}
-	else if (CLUBSETTING::PUTTER == this->m_eClub)
-	{
-		if (BALLPLACE::GREEN == this->m_eBallPlace)
-		{
-			this->m_bActiveState = true;
-		}
-		else
-		{
-			this->m_bActiveState = false;
-		}
-	}
-	else
-	{
-		std::vector<BALLPLACE> possible = { BALLPLACE::FAIRWAY, BALLPLACE::ROUGH, BALLPLACE::BUNKER };
-		
-		this->m_bActiveState = isIn(possible,this->m_eBallPlace);
-	}
 }
 
 void ADataManagement::ManageData(Packet* pt)
 {
+
 	if (PACKETTYPE::PT_BallPlace == pt->GetType())
 	{
-		SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
+		GIdata->SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
+
 		SendPacket<Packet>(PACKETTYPE::PT_BallPlaceRecv);
 
-		CheckActiveState();
+		GIdata->CheckActiveState();
 	}
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
-		SetShotData(static_cast<PacketShotDataInfo*>(pt)->GetData());
+		GIdata->SetShotData(static_cast<PacketShotDataInfo*>(pt)->GetData());
+
 		SendPacket<Packet>(PACKETTYPE::PT_ShotDataRecv);
 	}
 	else if (PACKETTYPE::PT_ActiveState == pt->GetType())
 	{
-		SetActiveState(static_cast<PacketActiveState*>(pt)->GetData());
+		GIdata->SetActiveState(static_cast<PacketActiveState*>(pt)->GetData());
+
 		SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
 	}
-	else if (PACKETTYPE::PT_ConnectCheck == pt->GetType())
-	{
-		//SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
-	}
+
 }
 
 void ADataManagement::ConnectServer()
@@ -184,13 +147,13 @@ void ADataManagement::SendPacket(PACKETDATA data)
 
 void ADataManagement::SendClubSetting()
 {
-	SendPacket<PacketClubSetting>(this->m_eClub);
+	SendPacket<PacketClubSetting>(GIdata->GetClubSetting());
 }
 void ADataManagement::SendTeeSetting()
 {
-	SendPacket<PacketTeeSetting>(this->m_eTee);
+	SendPacket<PacketTeeSetting>(GIdata->GetTeeSetting());
 }
 void ADataManagement::SendActiveState()
 {
-	SendPacket<PacketActiveState>(this->m_bActiveState);
+	SendPacket<PacketActiveState>(GIdata->GetActiveState());
 }
