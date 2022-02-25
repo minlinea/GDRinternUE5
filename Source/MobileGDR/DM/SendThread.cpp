@@ -63,17 +63,21 @@ uint32 SendThread::Run()
 			}
 			this->m_qPacket = queuepacket;
 		}
+		if (SCS_Connected != m_sSocket->GetConnectionState())
+		{
+			this->m_bRun = false;
+		}
 	}
 	return 0;
 }
 void SendThread::Exit()
 {
-	this->Stop();
+	this->m_bRun = false;
 }
 
 void SendThread::Stop()
 {
-	this->m_bRun = false;
+	this->Exit();
 }
 
 bool SendThread::ClientSend(Packet* packet)

@@ -42,6 +42,9 @@ public:
 	bool ConnectServer();		
 	UFUNCTION(BlueprintCallable)
 	void DisconnectServer();
+	UFUNCTION(BlueprintCallable)
+	bool isConnected();
+
 
 	UFUNCTION(BlueprintCallable)
 	void SendClubSetting();
@@ -49,9 +52,13 @@ public:
 	void SendTeeSetting();
 	UFUNCTION(BlueprintCallable)
 	void SendActiveState();
+	
 
 	template <class P, class PACKETDATA>
-	void SendPacket(PACKETDATA data);
+	void SendPacket(PACKETDATA data)
+	{
+		this->m_tSend->GetQueue().push(new P(data));
+	}
 
 protected:
 	// Called when the game starts or when spawned

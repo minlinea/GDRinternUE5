@@ -63,6 +63,7 @@ uint32 RecvThread::Run()
 			this->m_bRun = false;
 		}
 	}
+	this->m_sSocket->Close();
 	return 0;
 }
 
@@ -108,12 +109,12 @@ void RecvThread::ReadAddData(Packet& packet)
 
 void RecvThread::Exit()
 {
-	this->Stop();
+	this->m_bRun = false;
 }
 
 void RecvThread::Stop()
 {
-	this->m_bRun = false;
+	this->Exit();
 }
 
 bool RecvThread::ClientRecv(void* buf, int size)

@@ -13,7 +13,6 @@ ADataManagement::ADataManagement()
 	this->m_sServerAddress = TEXT("192.168.245.130");
 	this->m_iServerPort = PORT;
 	this->m_sSocket = nullptr;
-
 	this->m_tSend = nullptr;
 	this->m_tRecv = nullptr;
 }
@@ -27,6 +26,7 @@ ADataManagement::~ADataManagement()
 void ADataManagement::BeginPlay()
 {
 	Super::BeginPlay();
+	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 }
 
 // Called every frame
@@ -113,19 +113,29 @@ bool ADataManagement::ConnectServer()
 
 void ADataManagement::DisconnectServer()
 {
-	if (nullptr != this->m_sSocket)
-	{
-		this->m_sSocket->Close();
-	}
+	this->m_sSocket->Close();
 
 	if (nullptr != this->m_tSend)
 	{
-		this->m_tSend->Stop();
+		this->m_tSend->Exit();
 	}
 
 	if (nullptr != this->m_tRecv)
 	{
-		this->m_tRecv->Stop();
+		this->m_tRecv->Exit();
+	}
+}
+
+UFUNCTION(BlueprintCallable)
+bool ADataManagement::isConnected()
+{
+	if (SCS_Connected == this->m_sSocket->GetConnectionState())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -141,11 +151,6 @@ void ADataManagement::MakeThread()
 	FRunnableThread::Create(this->m_tRecv, TEXT("RecvThread"));
 }
 
-template <class P, class PACKETDATA>
-void ADataManagement::SendPacket(PACKETDATA data)
-{
-	this->m_tSend->GetQueue().push(new P(data));
-}
 
 void ADataManagement::SendClubSetting()
 {
