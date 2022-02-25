@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-
+#include <vector>
 //////////////////////////////////////////////////////////////////////////////////
 // define
 
@@ -30,19 +30,6 @@ enum class TEESETTING {
 	T55,
 	T60
 };
-inline std::ostream& operator << (std::ostream& os, const TEESETTING& t);
-inline std::ostream& operator << (std::ostream& os, const TEESETTING& t)
-{
-	if (TEESETTING::T25 == t)		std::cout << "T25";
-	else if (TEESETTING::T30 == t)	std::cout << "T30";
-	else if (TEESETTING::T35 == t)	std::cout << "T35";
-	else if (TEESETTING::T40 == t)	std::cout << "T40";
-	else if (TEESETTING::T45 == t)	std::cout << "T45";
-	else if (TEESETTING::T50 == t)	std::cout << "T50";
-	else if (TEESETTING::T55 == t)	std::cout << "T55";
-	else if (TEESETTING::T60 == t)	std::cout << "T60";
-	return os;
-}
 inline const char* to_string(const TEESETTING& t);
 inline const char* to_string(const TEESETTING& t)
 {
@@ -63,15 +50,6 @@ enum class CLUBSETTING {
 	WEDGE,
 	PUTTER
 };
-inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t);
-inline std::ostream& operator << (std::ostream& os, const CLUBSETTING& t)
-{
-	if (CLUBSETTING::DRIVER == t)		std::cout << "DRIVER";
-	else if (CLUBSETTING::IRON == t)	std::cout << "IRON";
-	else if (CLUBSETTING::WEDGE == t)	std::cout << "WEDGE";
-	else if (CLUBSETTING::PUTTER == t)	std::cout << "PUTTER";
-	return os;
-}
 inline const char* to_string(const CLUBSETTING& t);
 inline const char* to_string(const CLUBSETTING& t)
 {
@@ -84,28 +62,15 @@ inline const char* to_string(const CLUBSETTING& t)
 
 enum class BALLPLACE
 {
-	FAIRWAY,
+	FAIRWAY = 0,
 	ROUGH,
 	BUNKER,
 	TEE,
 	GREEN,
 	WAIT,
 	SLEEP,
-	OUTOFBOUND
+	OUTOFBOUND 
 };
-inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t);
-inline std::ostream& operator << (std::ostream& os, const BALLPLACE& t)
-{
-	if (BALLPLACE::FAIRWAY == t)	std::cout << "PAIRWAY";
-	else if (BALLPLACE::ROUGH == t)	std::cout << "ROUGH";
-	else if (BALLPLACE::BUNKER == t)std::cout << "BUNKER";
-	else if (BALLPLACE::TEE == t)	std::cout << "TEE";
-	else if (BALLPLACE::GREEN == t)	std::cout << "GREEN";
-	else if (BALLPLACE::WAIT == t)	std::cout << "WAIT";
-	else if (BALLPLACE::SLEEP == t)	std::cout << "SLEEP";
-	else if (BALLPLACE::OUTOFBOUND == t)	std::cout << "OUTOFBOUND";
-	return os;
-}
 inline const char* to_string(const BALLPLACE& t);
 inline const char* to_string(const BALLPLACE& t)
 {
@@ -119,7 +84,18 @@ inline const char* to_string(const BALLPLACE& t)
 	else if (BALLPLACE::OUTOFBOUND == t)return "OUTOFBOUND";
 	return "NONE";
 }
-
+inline bool isIn(const BALLPLACE* arr, const int size, const BALLPLACE& target);
+inline bool isIn(const std::vector<BALLPLACE>& arr, const BALLPLACE& target)
+{
+	for (auto p : arr)
+	{
+		if (p == target)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 
 
@@ -138,26 +114,6 @@ enum class PACKETTYPE {
 	PT_TeeSettingRecv,
 	PT_None
 };
-inline std::ostream& operator << (std::ostream& os, const PACKETTYPE& t);
-inline std::ostream& operator << (std::ostream& os, const PACKETTYPE& t)
-{
-	if (PACKETTYPE::PT_ActiveState == t)			std::cout << "PT_ActiveState";
-	else if (PACKETTYPE::PT_ActiveStateRecv == t)	std::cout << "PT_ActiveStateRecv";
-	else if (PACKETTYPE::PT_BallPlace == t)			std::cout << "PT_BallPlace";
-	else if (PACKETTYPE::PT_BallPlaceRecv == t)		std::cout << "PT_BallPlaceRecv";
-	else if (PACKETTYPE::PT_ConnectCheck == t)		std::cout << "PT_ConnectCheck";
-	else if (PACKETTYPE::PT_Disconnect == t)		std::cout << "PT_Disconnect";
-	else if (PACKETTYPE::PT_ClubSetting == t)		std::cout << "PT_ClubSetting";
-	else if (PACKETTYPE::PT_ClubSettingRecv == t)	std::cout << "PT_ClubSettingRecv";
-	else if (PACKETTYPE::PT_ShotData == t)			std::cout << "PT_ShotData";
-	else if (PACKETTYPE::PT_ShotDataRecv == t)		std::cout << "PT_ShotDataRecv";
-	else if (PACKETTYPE::PT_TeeSetting == t)		std::cout << "PT_TeeSetting";
-	else if (PACKETTYPE::PT_TeeSettingRecv == t)	std::cout << "PT_TeeSettingRecv";
-	else if (PACKETTYPE::PT_None == t)				std::cout << "PT_None";
-	else											std::cout << "None Type Message";
-
-	return os;
-}
 inline const char* to_string(const PACKETTYPE& t);
 inline const char* to_string(const PACKETTYPE& t)
 {

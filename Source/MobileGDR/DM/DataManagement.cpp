@@ -2,7 +2,7 @@
 
 
 #include "DataManagement.h"
-
+#include <vector>
 // Sets default values
 ADataManagement::ADataManagement()
 {
@@ -65,12 +65,46 @@ void ADataManagement::CheckQueue()
 	
 }
 
+void ADataManagement::CheckActiveState()
+{
+	if (CLUBSETTING::DRIVER == this->m_eClub)
+	{
+		if (BALLPLACE::TEE == this->m_eBallPlace)
+		{
+			this->m_bActiveState = true;
+		}
+		else
+		{
+			this->m_bActiveState = false;
+		}
+	}
+	else if (CLUBSETTING::PUTTER == this->m_eClub)
+	{
+		if (BALLPLACE::GREEN == this->m_eBallPlace)
+		{
+			this->m_bActiveState = true;
+		}
+		else
+		{
+			this->m_bActiveState = false;
+		}
+	}
+	else
+	{
+		std::vector<BALLPLACE> possible = { BALLPLACE::FAIRWAY, BALLPLACE::ROUGH, BALLPLACE::BUNKER };
+		
+		this->m_bActiveState = isIn(possible,this->m_eBallPlace);
+	}
+}
+
 void ADataManagement::ManageData(Packet* pt)
 {
 	if (PACKETTYPE::PT_BallPlace == pt->GetType())
 	{
 		SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
 		SendPacket<Packet>(PACKETTYPE::PT_BallPlaceRecv);
+
+		CheckActiveState();
 	}
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
@@ -135,14 +169,11 @@ void ADataManagement::MakeThread()
 	this->m_tSend = new SendThread(this->m_sSocket);
 	FRunnableThread::Create(this->m_tSend, TEXT("SendThread"));
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-		FString::Printf(TEXT("Create SendThread")), true, FVector2D{ 2.f, 2.f });
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+	//	FString::Printf(TEXT("Create SendThread")), true, FVector2D{ 2.f, 2.f });
 
 	this->m_tRecv = new RecvThread(this->m_sSocket);
 	FRunnableThread::Create(this->m_tRecv, TEXT("RecvThread"));
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-		FString::Printf(TEXT("Create RecvThread")), true, FVector2D{ 2.f, 2.f });
 }
 
 template <class P, class PACKETDATA>
@@ -153,13 +184,13 @@ void ADataManagement::SendPacket(PACKETDATA data)
 
 void ADataManagement::SendClubSetting()
 {
-	SendPacket<PacketClubSetting>(m_eClub);
+	SendPacket<PacketClubSetting>(this->m_eClub);
 }
 void ADataManagement::SendTeeSetting()
 {
-	SendPacket<PacketTeeSetting>(m_eTee);
+	SendPacket<PacketTeeSetting>(this->m_eTee);
 }
 void ADataManagement::SendActiveState()
 {
-	SendPacket<PacketActiveState>(m_bActiveState);
+	SendPacket<PacketActiveState>(this->m_bActiveState);
 }

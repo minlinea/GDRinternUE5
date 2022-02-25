@@ -57,8 +57,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SendActiveState();
 
-	
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -78,7 +76,7 @@ public:
 	void MakeThread();
 	void CheckQueue();
 	void ManageData(Packet* pt);
-
+	void CheckActiveState();
 
 	
 	void SetShotData(const ShotDataInfo& sd)
@@ -226,6 +224,7 @@ public:
 		{
 			this->m_eClub = CLUBSETTING::PUTTER;
 		}
+		CheckActiveState();
 	}
 
 	UFUNCTION(BlueprintCallable)
