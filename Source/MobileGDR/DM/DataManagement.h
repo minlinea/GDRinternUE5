@@ -39,7 +39,7 @@ public:
 	* 현재 모바일 빌드 시에 SCS_NotConnected가 통과되지 않는 문제가 있음
 	*/
 	UFUNCTION(BlueprintCallable)
-	void ConnectServer();		
+	bool ConnectServer();		
 	UFUNCTION(BlueprintCallable)
 	void DisconnectServer();
 

@@ -85,7 +85,7 @@ void ADataManagement::ManageData(Packet* pt)
 
 }
 
-void ADataManagement::ConnectServer()
+bool ADataManagement::ConnectServer()
 {
 	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 
@@ -101,11 +101,13 @@ void ADataManagement::ConnectServer()
 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
 			FString::Printf(TEXT("Connect OK")), true, FVector2D{ 2.f, 2.f });
+		return true;
 	}
 	else
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
 			FString::Printf(TEXT("Connect Fail")), true, FVector2D{ 2.f, 2.f });
+		return false;
 	}
 }
 
