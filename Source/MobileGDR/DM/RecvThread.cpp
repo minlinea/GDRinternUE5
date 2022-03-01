@@ -2,6 +2,8 @@
 
 
 #include "RecvThread.h"
+#include "GameFramework/Actor.h"
+
 
 RecvThread::RecvThread()
 {
@@ -17,18 +19,7 @@ RecvThread::RecvThread(FSocket *socket)
 
 RecvThread::~RecvThread()
 {
-	if (0 != this->m_qPacket.size())
-	{
-		if (true != this->m_qPacket.empty())
-		{
-			for (auto p = this->m_qPacket.front(); true != this->m_qPacket.empty(); )
-			{
-				p = this->m_qPacket.front();
-				delete p;
-				this->m_qPacket.pop();
-			}
-		}
-	}
+	Exit();
 }
 
 bool RecvThread::Init()
@@ -110,6 +101,19 @@ void RecvThread::ReadAddData(Packet& packet)
 void RecvThread::Exit()
 {
 	this->m_bRun = false;
+
+	if (0 != this->m_qPacket.size())
+	{
+		if (true != this->m_qPacket.empty())
+		{
+			for (auto p = this->m_qPacket.front(); true != this->m_qPacket.empty(); )
+			{
+				p = this->m_qPacket.front();
+				delete p;
+				this->m_qPacket.pop();
+			}
+		}
+	}
 }
 
 void RecvThread::Stop()

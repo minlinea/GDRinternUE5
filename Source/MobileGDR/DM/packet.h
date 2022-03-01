@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 //////////////////////////////////////////////////////////////////////////////////
 // define
 
@@ -84,17 +85,10 @@ inline const char* to_string(const BALLPLACE& t)
 	else if (BALLPLACE::OUTOFBOUND == t)return "OUTOFBOUND";
 	return "NONE";
 }
-inline bool isIn(const BALLPLACE* arr, const int size, const BALLPLACE& target);
+inline bool isIn(const std::vector<BALLPLACE>& arr, const BALLPLACE& target);
 inline bool isIn(const std::vector<BALLPLACE>& arr, const BALLPLACE& target)
 {
-	for (auto p : arr)
-	{
-		if (p == target)
-		{
-			return true;
-		}
-	}
-	return false;
+	return std::binary_search(arr.begin(), arr.end(), target);
 }
 
 

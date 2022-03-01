@@ -24,10 +24,6 @@ class MOBILEGDR_API UGameInstanceData : public UGameInstance
 	virtual void Init() override;
 
 public:
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void UpdateText();
-
 	void CheckActiveState();
 
 	void SetShotData(const ShotDataInfo& sd)
@@ -37,7 +33,6 @@ public:
 	void SetShotData(uint8* sd)
 	{
 		FMemory::Memmove(&m_sdShotData, sd, sizeof(ShotDataInfo));
-		UpdateText();
 	}
 	void SetTeeSetting(const TEESETTING& tee)
 	{
@@ -46,7 +41,6 @@ public:
 	void SetTeeSetting(uint8* tee)
 	{
 		FMemory::Memmove(&m_eTee, tee, sizeof(TEESETTING));
-		UpdateText();
 	}
 	void SetClubSetting(const CLUBSETTING& club)
 	{
@@ -55,7 +49,6 @@ public:
 	void SetClubSetting(uint8* club)
 	{
 		FMemory::Memmove(&m_eClub, club, sizeof(CLUBSETTING));
-		UpdateText();
 	}
 	void SetBallPlace(const BALLPLACE& place)
 	{
@@ -64,7 +57,6 @@ public:
 	void SetBallPlace(uint8* ballplace)
 	{
 		FMemory::Memmove(&m_eBallPlace, ballplace, sizeof(BALLPLACE));
-		UpdateText();
 	}
 	void SetActiveState(const bool& activestate)
 	{
@@ -73,7 +65,6 @@ public:
 	void SetActiveState(uint8* activestate)
 	{
 		FMemory::Memmove(&m_bActiveState, activestate, sizeof(bool));
-		UpdateText();
 	}
 
 

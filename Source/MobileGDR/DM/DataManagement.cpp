@@ -12,7 +12,7 @@ ADataManagement::ADataManagement()
 
 	this->m_sServerAddress = TEXT("192.168.245.130");
 	this->m_iServerPort = PORT;
-	this->m_sSocket = nullptr;
+	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 	this->m_tSend = nullptr;
 	this->m_tRecv = nullptr;
 }
@@ -26,7 +26,6 @@ ADataManagement::~ADataManagement()
 void ADataManagement::BeginPlay()
 {
 	Super::BeginPlay();
-	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 }
 
 // Called every frame
@@ -126,15 +125,15 @@ void ADataManagement::DisconnectServer()
 	}
 }
 
-UFUNCTION(BlueprintCallable)
 bool ADataManagement::isConnected()
 {
-	if (SCS_Connected == this->m_sSocket->GetConnectionState())
+	if (true == this->m_tRecv->GetRun())
 	{
 		return true;
 	}
 	else
 	{
+		this->m_tSend->Exit();
 		return false;
 	}
 }
@@ -143,9 +142,6 @@ void ADataManagement::MakeThread()
 {
 	this->m_tSend = new SendThread(this->m_sSocket);
 	FRunnableThread::Create(this->m_tSend, TEXT("SendThread"));
-
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-	//	FString::Printf(TEXT("Create SendThread")), true, FVector2D{ 2.f, 2.f });
 
 	this->m_tRecv = new RecvThread(this->m_sSocket);
 	FRunnableThread::Create(this->m_tRecv, TEXT("RecvThread"));

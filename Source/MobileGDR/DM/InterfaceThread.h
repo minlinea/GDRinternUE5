@@ -36,6 +36,16 @@ public:
 		this->m_qPacket = queuepacket;
 	}
 
+	bool GetRun()
+	{
+		return m_bRun;
+	}
+
+	void SetRun(const bool& run)
+	{
+		this->m_bRun = run;
+	}
+
 protected:
 	bool m_bRun;
 	FSocket* m_sSocket;

@@ -2,6 +2,7 @@
 
 
 #include "SendThread.h"
+#include "GameFramework/Actor.h"
 
 SendThread::SendThread()
 {
@@ -17,6 +18,20 @@ SendThread::SendThread(FSocket* socket)
 
 SendThread::~SendThread()
 {
+	Exit();
+}
+
+bool SendThread::Init()
+{
+	this->m_bRun = true;
+
+	return true;
+};
+
+void SendThread::Exit()
+{
+	this->m_bRun = false;
+
 	if (0 != this->m_qPacket.size())
 	{
 		if (true != this->m_qPacket.empty())
@@ -30,13 +45,6 @@ SendThread::~SendThread()
 		}
 	}
 }
-
-bool SendThread::Init()
-{
-	this->m_bRun = true;
-
-	return true;
-};
 
 uint32 SendThread::Run()
 {
@@ -63,16 +71,14 @@ uint32 SendThread::Run()
 			}
 			this->m_qPacket = queuepacket;
 		}
-		if (SCS_Connected != m_sSocket->GetConnectionState())
-		{
-			this->m_bRun = false;
-		}
+		//if (SCS_ConnectionError == this->m_sSocket->GetConnectionState())
+		//{
+		//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+		//		FString::Printf(TEXT("SendThread SCS_ConnectionError")), true, FVector2D{ 2.f, 2.f });
+		//	this->m_bRun = false;
+		//}
 	}
 	return 0;
-}
-void SendThread::Exit()
-{
-	this->m_bRun = false;
 }
 
 void SendThread::Stop()
