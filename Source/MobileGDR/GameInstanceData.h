@@ -16,16 +16,23 @@ class MOBILEGDR_API UGameInstanceData : public UGameInstance
 	GENERATED_BODY()
 	
 	bool m_bActiveState;
+	bool m_bActiveStateLock;
+
 	BALLPLACE m_eBallPlace;
 	ShotDataInfo m_sdShotData;
 	TEESETTING m_eTee;
 	CLUBSETTING m_eClub;
+	
+
 
 	virtual void Init() override;
 
-public:
-	void CheckActiveState();
 
+public:
+	FTimerHandle m_hActiveStateTimer;
+	void ActiveStateFunction();
+
+	void CheckActiveState();
 	void SetShotData(const ShotDataInfo& sd)
 	{
 		this->m_sdShotData = sd;
@@ -186,6 +193,5 @@ public:
 		{
 			this->m_bActiveState = false;
 		}
-		//UpdateText();
 	}
 };

@@ -12,36 +12,53 @@ void UGameInstanceData::Init()
 	this->m_sdShotData = ShotDataInfo{ 0,0,0,0,0,0,0,0,0 };
 	this->m_eTee = TEESETTING::T30;
 	this->m_eClub = CLUBSETTING::DRIVER;
+	this->m_bActiveStateLock = false;
 }
 
 void UGameInstanceData::CheckActiveState()
 {
-	if (CLUBSETTING::DRIVER == this->m_eClub)
+	if (false == this->m_bActiveStateLock)
 	{
-		if (BALLPLACE::TEE == this->m_eBallPlace)
+		if (CLUBSETTING::DRIVER == this->m_eClub)
 		{
-			this->m_bActiveState = true;
+			if (BALLPLACE::TEE == this->m_eBallPlace)
+			{
+				this->m_bActiveState = true;
+			}
+			else
+			{
+				this->m_bActiveState = false;
+			}
+		}
+		else if (CLUBSETTING::PUTTER == this->m_eClub)
+		{
+			if (BALLPLACE::GREEN == this->m_eBallPlace)
+			{
+				this->m_bActiveState = true;
+			}
+			else
+			{
+				this->m_bActiveState = false;
+			}
 		}
 		else
 		{
-			this->m_bActiveState = false;
+			std::vector<BALLPLACE> possible = { BALLPLACE::FAIRWAY, BALLPLACE::ROUGH, BALLPLACE::BUNKER };
+
+			this->m_bActiveState = isIn(possible, this->m_eBallPlace);
 		}
 	}
-	else if (CLUBSETTING::PUTTER == this->m_eClub)
+}
+
+void UGameInstanceData::ActiveStateFunction()
+{
+	if (false == this->m_bActiveStateLock)
 	{
-		if (BALLPLACE::GREEN == this->m_eBallPlace)
-		{
-			this->m_bActiveState = true;
-		}
-		else
-		{
-			this->m_bActiveState = false;
-		}
+		this->m_bActiveStateLock = true;
 	}
 	else
 	{
-		std::vector<BALLPLACE> possible = { BALLPLACE::FAIRWAY, BALLPLACE::ROUGH, BALLPLACE::BUNKER };
-
-		this->m_bActiveState = isIn(possible, this->m_eBallPlace);
+		this->m_bActiveStateLock = false;
+		CheckActiveState();
 	}
 }

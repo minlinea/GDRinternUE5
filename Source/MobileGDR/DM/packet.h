@@ -17,8 +17,8 @@
 inline const char* to_string(const bool& t);
 inline const char* to_string(const bool& t)
 {
-	if (true == t)	return "TRUE";
-	else			return "FALSE";
+	if (true == t)	return "READY";
+	else			return "WAIT";
 }
 
 enum class TEESETTING {

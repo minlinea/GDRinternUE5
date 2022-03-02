@@ -34,13 +34,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool isConnected();
 
-
 	UFUNCTION(BlueprintCallable)
 	void SendPacket(const FString& type);
 	
-
 	template <class P, class PACKETDATA>
-	void SendPacket(PACKETDATA data)
+	void PushSendQueue(PACKETDATA data)
 	{
 		this->m_tSend->GetQueue().push(new P(data));
 	}

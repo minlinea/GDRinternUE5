@@ -60,12 +60,11 @@ void ADataManagement::CheckQueue()
 
 void ADataManagement::ManageData(Packet* pt)
 {
-
 	if (PACKETTYPE::PT_BallPlace == pt->GetType())
 	{
 		GIdata->SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
 
-		SendPacket<Packet>(PACKETTYPE::PT_BallPlaceRecv);
+		PushSendQueue<Packet>(PACKETTYPE::PT_BallPlaceRecv);
 
 		GIdata->CheckActiveState();
 	}
@@ -73,15 +72,22 @@ void ADataManagement::ManageData(Packet* pt)
 	{
 		GIdata->SetShotData(static_cast<PacketShotDataInfo*>(pt)->GetData());
 
-		SendPacket<Packet>(PACKETTYPE::PT_ShotDataRecv);
+		PushSendQueue<Packet>(PACKETTYPE::PT_ShotDataRecv);
 	}
 	else if (PACKETTYPE::PT_ActiveState == pt->GetType())
 	{
 		GIdata->SetActiveState(static_cast<PacketActiveState*>(pt)->GetData());
 
-		SendPacket<Packet>(PACKETTYPE::PT_ActiveStateRecv);
-	}
+		GIdata->ActiveStateFunction();
+		GetWorldTimerManager().SetTimer(GIdata->m_hActiveStateTimer, GIdata, &UGameInstanceData::ActiveStateFunction, 1.0f, false, 3.0f);
 
+		PushSendQueue<Packet>(PACKETTYPE::PT_ActiveStateRecv);
+	}
+	else if (PACKETTYPE::PT_ConnectCheck == pt->GetType())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+			FString::Printf(TEXT("Connect Check")), true, FVector2D{ 2.f, 2.f });
+	}
 }
 
 bool ADataManagement::ConnectServer()
@@ -150,20 +156,17 @@ void ADataManagement::MakeThread()
 
 void ADataManagement::SendPacket(const FString& type)
 {
-	if (true == this->m_tRecv->GetRun())
+	if (FString("ClubSetting") == type)
 	{
-
-		if (FString("ClubSetting") == type)
-		{
-			SendPacket<PacketClubSetting>(GIdata->GetClubSetting());
-		}
-		else if (FString("TeeSetting") == type)
-		{
-			SendPacket<PacketTeeSetting>(GIdata->GetTeeSetting());
-		}
-		else if (FString("SendActiveState") == type)
-		{
-			SendPacket<PacketActiveState>(GIdata->GetActiveState());
-		}
+		PushSendQueue<PacketClubSetting>(GIdata->GetClubSetting());
 	}
+	else if (FString("TeeSetting") == type)
+	{
+		PushSendQueue<PacketTeeSetting>(GIdata->GetTeeSetting());
+	}
+	else if (FString("SendActiveState") == type)
+	{
+		PushSendQueue<PacketActiveState>(GIdata->GetActiveState());
+	}
+
 }
