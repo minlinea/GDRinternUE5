@@ -148,15 +148,22 @@ void ADataManagement::MakeThread()
 }
 
 
-void ADataManagement::SendClubSetting()
+void ADataManagement::SendPacket(const FString& type)
 {
-	SendPacket<PacketClubSetting>(GIdata->GetClubSetting());
-}
-void ADataManagement::SendTeeSetting()
-{
-	SendPacket<PacketTeeSetting>(GIdata->GetTeeSetting());
-}
-void ADataManagement::SendActiveState()
-{
-	SendPacket<PacketActiveState>(GIdata->GetActiveState());
+	if (true == this->m_tRecv->GetRun())
+	{
+
+		if (FString("ClubSetting") == type)
+		{
+			SendPacket<PacketClubSetting>(GIdata->GetClubSetting());
+		}
+		else if (FString("TeeSetting") == type)
+		{
+			SendPacket<PacketTeeSetting>(GIdata->GetTeeSetting());
+		}
+		else if (FString("SendActiveState") == type)
+		{
+			SendPacket<PacketActiveState>(GIdata->GetActiveState());
+		}
+	}
 }

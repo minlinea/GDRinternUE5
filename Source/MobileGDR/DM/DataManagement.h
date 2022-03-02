@@ -17,17 +17,6 @@ UCLASS()
 class MOBILEGDR_API ADataManagement : public AActor
 {
 	GENERATED_BODY()
-	
-private:
-
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	FString m_sServerAddress;
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int32 m_iServerPort;
-	FSocket* m_sSocket;
-
-	SendThread* m_tSend;
-	RecvThread* m_tRecv;
 
 public:	
 	// Sets default values for this actor's properties
@@ -47,11 +36,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	void SendClubSetting();
-	UFUNCTION(BlueprintCallable)
-	void SendTeeSetting();
-	UFUNCTION(BlueprintCallable)
-	void SendActiveState();
+	void SendPacket(const FString& type);
 	
 
 	template <class P, class PACKETDATA>
@@ -77,6 +62,17 @@ public:
 	void CheckQueue();
 	void ManageData(Packet* pt);
 
+
+private:
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		FString m_sServerAddress;
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		int32 m_iServerPort;
+	FSocket* m_sSocket;
+
+	SendThread* m_tSend;
+	RecvThread* m_tRecv;
 };
 
 #define GIdata static_cast<UGameInstanceData*>(GetGameInstance())
