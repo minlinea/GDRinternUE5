@@ -11,12 +11,6 @@
 class MOBILEGDR_API SendThread : public InterfaceThread
 {
 public:
-	static SendThread& Instance()
-	{
-		static SendThread Instance;
-		return Instance;
-	}
-
 	SendThread();
 	SendThread(FSocket* socket);
 	~SendThread();

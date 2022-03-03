@@ -31,25 +31,24 @@ bool SendThread::Init()
 void SendThread::Exit()
 {
 	this->m_bRun = false;
-
-	if (0 != this->m_qPacket.size())
+	if (true != this->m_qPacket.empty())
 	{
-		if (true != this->m_qPacket.empty())
+		for (auto p = this->m_qPacket.front(); true != this->m_qPacket.empty(); )
 		{
-			for (auto p = this->m_qPacket.front(); true != this->m_qPacket.empty(); )
-			{
-				p = this->m_qPacket.front();
-				delete p;
-				this->m_qPacket.pop();
-			}
+			p = this->m_qPacket.front();
+			delete p;
+			this->m_qPacket.pop();
 		}
 	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+		FString::Printf(TEXT("SendThread Exit")), true, FVector2D{ 2.f, 2.f });
 }
 
 uint32 SendThread::Run()
 {
 	Packet pt;
-	while (this->m_bRun)
+	while (true == this->m_bRun)
 	{
 		if (true != this->m_qPacket.empty())
 		{
@@ -63,7 +62,7 @@ uint32 SendThread::Run()
 					GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
 						FString::Printf(TEXT("Error SendThread ClientSend")), true, FVector2D{ 2.f, 2.f });
 
-					this->m_bRun = false;
+					//Exit();
 					break;
 				}
 				delete packet;
@@ -78,12 +77,13 @@ uint32 SendThread::Run()
 		//	this->m_bRun = false;
 		//}
 	}
+	//Exit();
 	return 0;
 }
 
 void SendThread::Stop()
 {
-	this->Exit();
+	Exit();
 }
 
 bool SendThread::ClientSend(Packet* packet)
@@ -95,5 +95,9 @@ bool SendThread::ClientSend(Packet* packet)
 
 	FMemory::Memmove(senddata, packet, sendsize);
 
-	return this->m_sSocket->Send((uint8*)senddata, sendsize, sendsize);
+	bool result = this->m_sSocket->Send((uint8*)senddata, sendsize, sendsize);
+
+	FMemory::Free(senddata);
+
+	return result;
 }

@@ -15,6 +15,7 @@ RecvThread::RecvThread(FSocket *socket)
 {
 	this->m_bRun = false;
 	this->m_sSocket = socket;
+	
 }
 
 RecvThread::~RecvThread()
@@ -35,7 +36,7 @@ uint32 RecvThread::Run()
 	while (this->m_bRun)
 	{
 		FMemory::Memzero(pt);
-		if (true == this->ClientRecv(&pt, PACKETHEADER))
+		if (true == ClientRecv(&pt, PACKETHEADER))
 		{
 			if (PACKETHEADER != pt.GetSize())
 			{
@@ -51,10 +52,9 @@ uint32 RecvThread::Run()
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
 				FString::Printf(TEXT("Error RecvThread Run no data Recv")), true, FVector2D{ 2.f, 2.f });
 
-			this->m_bRun = false;
+			Exit();
 		}
 	}
-	this->m_sSocket->Close();
 	return 0;
 }
 
@@ -62,7 +62,7 @@ void RecvThread::ReadAddData(Packet& packet)
 {
 	size_t recvsize{ packet.GetSize() - PACKETHEADER };
 	uint8* recvdata{ (uint8*)FMemory::Malloc(recvsize) };
-	if (true == this->ClientRecv(recvdata, recvsize))
+	if (true == ClientRecv(recvdata, recvsize))
 	{
 		if (PACKETTYPE::PT_BallPlace == packet.GetType())
 		{
@@ -93,7 +93,7 @@ void RecvThread::ReadAddData(Packet& packet)
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
 			FString::Printf(TEXT("ReadAddData no data Recv Error")), true, FVector2D{ 2.f, 2.f });
 
-		this->m_bRun = false;
+		Exit();
 	}
 	FMemory::Free(recvdata);
 }
@@ -102,23 +102,20 @@ void RecvThread::Exit()
 {
 	this->m_bRun = false;
 
-	if (0 != this->m_qPacket.size())
+	if (true != this->m_qPacket.empty())
 	{
-		if (true != this->m_qPacket.empty())
+		for (auto p = this->m_qPacket.front(); true != this->m_qPacket.empty(); )
 		{
-			for (auto p = this->m_qPacket.front(); true != this->m_qPacket.empty(); )
-			{
-				p = this->m_qPacket.front();
-				delete p;
-				this->m_qPacket.pop();
-			}
+			p = this->m_qPacket.front();
+			delete p;
+			this->m_qPacket.pop();
 		}
 	}
 }
 
 void RecvThread::Stop()
 {
-	this->Exit();
+	Exit();
 }
 
 bool RecvThread::ClientRecv(void* buf, int size)

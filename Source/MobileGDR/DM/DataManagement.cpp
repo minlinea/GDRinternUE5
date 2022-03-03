@@ -104,7 +104,7 @@ bool ADataManagement::ConnectServer()
 	{
 		MakeThread();			//Send, Recv스레드 생성
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,
 			FString::Printf(TEXT("Connect OK")), true, FVector2D{ 2.f, 2.f });
 		return true;
 	}
@@ -123,12 +123,15 @@ void ADataManagement::DisconnectServer()
 	if (nullptr != this->m_tSend)
 	{
 		this->m_tSend->Exit();
+		this->m_tSend = nullptr;
 	}
 
 	if (nullptr != this->m_tRecv)
 	{
 		this->m_tRecv->Exit();
+		this->m_tRecv = nullptr;
 	}
+
 }
 
 bool ADataManagement::isConnected()
@@ -139,7 +142,6 @@ bool ADataManagement::isConnected()
 	}
 	else
 	{
-		this->m_tSend->Exit();
 		return false;
 	}
 }
