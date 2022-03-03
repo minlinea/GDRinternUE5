@@ -30,9 +30,19 @@ class MOBILEGDR_API UGameInstanceData : public UGameInstance
 
 public:
 	FTimerHandle m_hActiveStateTimer;
-	void ActiveStateFunction();
 
+	void ActiveStateFunction();
 	void CheckActiveState();
+
+	bool GetActiveStateLock()
+	{
+		return this->m_bActiveStateLock;
+	}
+	void SetActiveStateLock(const bool& asl)
+	{
+		this->m_bActiveStateLock = asl;
+	}
+
 	void SetShotData(const ShotDataInfo& sd)
 	{
 		this->m_sdShotData = sd;

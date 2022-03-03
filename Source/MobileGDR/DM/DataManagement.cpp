@@ -117,9 +117,9 @@ bool ADataManagement::ConnectServer()
 }
 
 void ADataManagement::DisconnectServer()
-{
+{	
 	this->m_sSocket->Close();
-
+	
 	if (nullptr != this->m_tSend)
 	{
 		this->m_tSend->Exit();
@@ -153,6 +153,8 @@ void ADataManagement::MakeThread()
 
 	this->m_tRecv = new RecvThread(this->m_sSocket);
 	FRunnableThread::Create(this->m_tRecv, TEXT("RecvThread"));
+
+	GIdata->SetBallPlace(BALLPLACE::OUTOFBOUND);
 }
 
 

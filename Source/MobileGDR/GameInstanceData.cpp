@@ -55,6 +55,7 @@ void UGameInstanceData::ActiveStateFunction()
 	if (false == this->m_bActiveStateLock)
 	{
 		this->m_bActiveStateLock = true;
+		this->m_bActiveState = false;
 	}
 	else
 	{
