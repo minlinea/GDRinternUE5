@@ -75,10 +75,6 @@ public:
 	{
 		FMemory::Memmove(&m_eBallPlace, ballplace, sizeof(BALLPLACE));
 	}
-	void SetActiveState(const bool& activestate)
-	{
-		this->m_bActiveState = activestate;
-	}
 	void SetActiveState(uint8* activestate)
 	{
 		FMemory::Memmove(&m_bActiveState, activestate, sizeof(bool));
@@ -101,10 +97,6 @@ public:
 	{
 		return this->m_eBallPlace;
 	}
-	const bool GetActiveState()
-	{
-		return this->m_bActiveState;
-	}
 
 
 	UFUNCTION(BlueprintPure)
@@ -112,9 +104,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	const FString GetFStringClubSetting()	{return FString(to_string(this->m_eClub));}
 	UFUNCTION(BlueprintPure)
-	const FString GetFStringActiveState()	{return FString(to_string(this->m_bActiveState));}
+	const FString GetFStringBallPlace()		{ return FString(to_string(this->m_eBallPlace)); }
 	UFUNCTION(BlueprintPure)
-	const FString GetFStringBallPlace()		{return FString(to_string(this->m_eBallPlace));}
+	const FString GetFStringActiveState()	{ return FString(to_string(this->m_bActiveState)); }
 
 	UFUNCTION(BlueprintPure)
 	const float GetBallSpeed()	{return this->m_sdShotData.ballspeed;}
@@ -132,6 +124,8 @@ public:
 	const float GetClubPath()	{return this->m_sdShotData.clubpath;}
 	UFUNCTION(BlueprintPure)
 	const float GetClubFace()	{return this->m_sdShotData.clubface;}
+	UFUNCTION(BlueprintPure)
+	const bool GetActiveState() { return this->m_bActiveState; }
 
 	UFUNCTION(BlueprintCallable)
 	void SetClubSetting(const FString& club)
@@ -193,15 +187,8 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void SetActiveState(const FString& tf)
+	void SetActiveState(const bool& tf)
 	{
-		if (FString("True") == tf)
-		{
-			this->m_bActiveState = true;
-		}
-		else if (FString("False") == tf)
-		{
-			this->m_bActiveState = false;
-		}
+		this->m_bActiveState = tf;
 	}
 };

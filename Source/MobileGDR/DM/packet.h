@@ -17,8 +17,14 @@
 inline const char* to_string(const bool& t);
 inline const char* to_string(const bool& t)
 {
-	if (true == t)	return "READY";
-	else			return "WAIT";
+	if (true == t)
+	{
+		return "Ready";	//준비, 가능은 에러가 남
+	}
+	else
+	{
+		return "Wait";	//대기 가능
+	}
 }
 
 enum class TEESETTING {
@@ -75,14 +81,14 @@ enum class BALLPLACE
 inline const char* to_string(const BALLPLACE& t);
 inline const char* to_string(const BALLPLACE& t)
 {
-	if (BALLPLACE::FAIRWAY == t)		return "PAIRWAY";
-	else if (BALLPLACE::ROUGH == t)		return "ROUGH";
-	else if (BALLPLACE::BUNKER == t)	return "BUNKER";
-	else if (BALLPLACE::TEE == t)		return "TEE";
-	else if (BALLPLACE::GREEN == t)		return "GREEN";
+	if (BALLPLACE::FAIRWAY == t)		return "Fairway";
+	else if (BALLPLACE::ROUGH == t)		return "Rough";
+	else if (BALLPLACE::BUNKER == t)	return "Bunker";
+	else if (BALLPLACE::TEE == t)		return "Tee";
+	else if (BALLPLACE::GREEN == t)		return "Green";
 	else if (BALLPLACE::WAIT == t)		return "WAIT";
 	else if (BALLPLACE::SLEEP == t)		return "SLEEP";
-	else if (BALLPLACE::OUTOFBOUND == t)return "OUTOFBOUND";
+	else if (BALLPLACE::OUTOFBOUND == t)return "OB";
 	return "NONE";
 }
 inline bool isIn(const std::vector<BALLPLACE>& arr, const BALLPLACE& target);
