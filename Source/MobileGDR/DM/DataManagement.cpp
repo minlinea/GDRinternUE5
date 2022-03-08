@@ -136,9 +136,16 @@ void ADataManagement::DisconnectServer()
 
 bool ADataManagement::isConnected()
 {
-	if (true == this->m_tRecv->GetRun())
+	if (nullptr != this->m_tRecv)
 	{
-		return true;
+		if (true == this->m_tRecv->GetRun())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	else
 	{
