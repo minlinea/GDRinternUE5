@@ -32,6 +32,8 @@ public:
 	FTimerHandle m_hActiveStateTimer;
 
 	void ActiveStateFunction();
+
+	UFUNCTION(BlueprintCallable)
 	void CheckActiveState();
 
 	bool GetActiveStateLock()
@@ -146,7 +148,6 @@ public:
 		{
 			this->m_eClub = CLUBSETTING::PUTTER;
 		}
-		CheckActiveState();
 	}
 
 	UFUNCTION(BlueprintCallable)
