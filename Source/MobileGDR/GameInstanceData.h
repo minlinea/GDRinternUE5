@@ -128,21 +128,21 @@ public:
 	const bool GetActiveState() { return this->m_bActiveState; }
 
 	UFUNCTION(BlueprintCallable)
-	void SetClubSetting(const FString& club)
+	void SetClubSetting(const int& club)
 	{
-		if (FString(to_string(CLUBSETTING::DRIVER)) == club)
+		if (static_cast<int>(CLUBSETTING::DRIVER) == club)
 		{
 			this->m_eClub = CLUBSETTING::DRIVER;
 		}
-		else if (FString(to_string(CLUBSETTING::IRON)) == club)
+		else if (static_cast<int>(CLUBSETTING::IRON) == club)
 		{
 			this->m_eClub = CLUBSETTING::IRON;
 		}
-		else if (FString(to_string(CLUBSETTING::WEDGE)) == club)
+		else if (static_cast<int>(CLUBSETTING::WEDGE) == club)
 		{
 			this->m_eClub = CLUBSETTING::WEDGE;
 		}
-		else if (FString(to_string(CLUBSETTING::PUTTER)) == club)
+		else if (static_cast<int>(CLUBSETTING::PUTTER) == club)
 		{
 			this->m_eClub = CLUBSETTING::PUTTER;
 		}
@@ -150,37 +150,37 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable)
-	void SetTeeSetting(const FString& tee)
+	void SetTeeSetting(const int& tee)
 	{
-		if (FString(to_string(TEESETTING::T25)) == tee)
+		if (static_cast<int>(TEESETTING::T25) == tee)
 		{
 			this->m_eTee = TEESETTING::T25;
 		}
-		else if (FString(to_string(TEESETTING::T30)) == tee)
+		else if (static_cast<int>(TEESETTING::T30) == tee)
 		{
 			this->m_eTee = TEESETTING::T30;
 		}
-		else if (FString(to_string(TEESETTING::T35)) == tee)
+		else if (static_cast<int>(TEESETTING::T35) == tee)
 		{
 			this->m_eTee = TEESETTING::T35;
 		}
-		else if (FString(to_string(TEESETTING::T40)) == tee)
+		else if (static_cast<int>(TEESETTING::T40) == tee)
 		{
 			this->m_eTee = TEESETTING::T40;
 		}
-		else if (FString(to_string(TEESETTING::T45)) == tee)
+		else if (static_cast<int>(TEESETTING::T45) == tee)
 		{
 			this->m_eTee = TEESETTING::T45;
 		}
-		else if (FString(to_string(TEESETTING::T50)) == tee)
+		else if (static_cast<int>(TEESETTING::T50) == tee)
 		{
 			this->m_eTee = TEESETTING::T50;
 		}
-		else if (FString(to_string(TEESETTING::T55)) == tee)
+		else if (static_cast<int>(TEESETTING::T55) == tee)
 		{
 			this->m_eTee = TEESETTING::T55;
 		}
-		else if (FString(to_string(TEESETTING::T60)) == tee)
+		else if (static_cast<int>(TEESETTING::T60) == tee)
 		{
 			this->m_eTee = TEESETTING::T60;
 		}
