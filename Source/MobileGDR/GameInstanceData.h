@@ -31,15 +31,20 @@ class MOBILEGDR_API UGameInstanceData : public UGameInstance
 public:
 	FTimerHandle m_hActiveStateTimer;
 
+	UFUNCTION(BlueprintCallable)
 	void ActiveStateFunction();
 
-	UFUNCTION(BlueprintCallable)
-	void CheckActiveState();
 
+	//return : CheckActiveState를 통해 m_bActiveState가 바뀌었다면 true
+	UFUNCTION(BlueprintCallable)
+	bool CheckActiveState();
+
+	UFUNCTION(BlueprintPure)
 	bool GetActiveStateLock()
 	{
 		return this->m_bActiveStateLock;
 	}
+	UFUNCTION(BlueprintCallable)
 	void SetActiveStateLock(const bool& asl)
 	{
 		this->m_bActiveStateLock = asl;

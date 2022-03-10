@@ -41,8 +41,8 @@ void SendThread::Exit()
 		}
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
-		FString::Printf(TEXT("SendThread Exit")), true, FVector2D{ 2.f, 2.f });
+	//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+	//	FString::Printf(TEXT("SendThread Exit")), true, FVector2D{ 2.f, 2.f });
 }
 
 uint32 SendThread::Run()
@@ -59,8 +59,8 @@ uint32 SendThread::Run()
 
 				if (false == ClientSend(packet))
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-						FString::Printf(TEXT("Error SendThread ClientSend")), true, FVector2D{ 2.f, 2.f });
+					/*GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+						FString::Printf(TEXT("Error SendThread ClientSend")), true, FVector2D{ 2.f, 2.f });*/
 
 					//Exit();
 					break;

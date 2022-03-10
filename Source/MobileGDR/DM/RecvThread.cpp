@@ -49,8 +49,8 @@ uint32 RecvThread::Run()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-				FString::Printf(TEXT("Error RecvThread Run no data Recv")), true, FVector2D{ 2.f, 2.f });
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+			//	FString::Printf(TEXT("Error RecvThread Run no data Recv")), true, FVector2D{ 2.f, 2.f });
 
 			Exit();
 		}
@@ -84,14 +84,14 @@ void RecvThread::ReadAddData(Packet& packet)
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
-				FString::Printf(TEXT("ReadAddData unknown type")), true, FVector2D{ 2.f, 2.f });
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow,
+			//	FString::Printf(TEXT("ReadAddData unknown type")), true, FVector2D{ 2.f, 2.f });
 		}
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-			FString::Printf(TEXT("ReadAddData no data Recv Error")), true, FVector2D{ 2.f, 2.f });
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+		//	FString::Printf(TEXT("ReadAddData no data Recv Error")), true, FVector2D{ 2.f, 2.f });
 
 		Exit();
 	}

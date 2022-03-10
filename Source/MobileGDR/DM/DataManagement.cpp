@@ -65,8 +65,6 @@ void ADataManagement::ManageData(Packet* pt)
 		GIdata->SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
 
 		PushSendQueue<Packet>(PACKETTYPE::PT_BallPlaceRecv);
-
-		GIdata->CheckActiveState();
 	}
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
@@ -85,8 +83,8 @@ void ADataManagement::ManageData(Packet* pt)
 	}
 	else if (PACKETTYPE::PT_ConnectCheck == pt->GetType())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-			FString::Printf(TEXT("Connect Check")), true, FVector2D{ 2.f, 2.f });
+		/*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+			FString::Printf(TEXT("Connect Check")), true, FVector2D{ 2.f, 2.f });*/
 	}
 }
 
@@ -104,14 +102,14 @@ bool ADataManagement::ConnectServer()
 	{
 		MakeThread();			//Send, Recv스레드 생성
 
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,
-			FString::Printf(TEXT("Connect OK")), true, FVector2D{ 2.f, 2.f });
+		/*GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,
+			FString::Printf(TEXT("Connect OK")), true, FVector2D{ 2.f, 2.f });*/
 		return true;
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-			FString::Printf(TEXT("Connect Fail")), true, FVector2D{ 2.f, 2.f });
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+		//	FString::Printf(TEXT("Connect Fail")), true, FVector2D{ 2.f, 2.f });
 		return false;
 	}
 }
@@ -167,6 +165,7 @@ void ADataManagement::MakeThread()
 
 void ADataManagement::SendPacket(const FString& type)
 {
+	
 	if (FString("ClubSetting") == type)
 	{
 		PushSendQueue<PacketClubSetting>(GIdata->GetClubSetting());
@@ -175,9 +174,11 @@ void ADataManagement::SendPacket(const FString& type)
 	{
 		PushSendQueue<PacketTeeSetting>(GIdata->GetTeeSetting());
 	}
-	else if (FString("SendActiveState") == type)
+	else if (FString("ActiveState") == type)
 	{
 		PushSendQueue<PacketActiveState>(GIdata->GetActiveState());
 	}
 
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+		FString::Printf(TEXT("%s"), *type), true, FVector2D{ 2.f, 2.f });
 }

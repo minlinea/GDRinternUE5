@@ -15,8 +15,9 @@ void UGameInstanceData::Init()
 	this->m_bActiveStateLock = false;
 }
 
-void UGameInstanceData::CheckActiveState()
+bool UGameInstanceData::CheckActiveState()
 {
+	bool check = this->m_bActiveState;
 	if (false == this->m_bActiveStateLock)
 	{
 		if (CLUBSETTING::DRIVER == this->m_eClub)
@@ -48,18 +49,35 @@ void UGameInstanceData::CheckActiveState()
 			this->m_bActiveState = isIn(possible, this->m_eBallPlace);
 		}
 	}
+	
+	if (check != this->m_bActiveState || true == this->m_bActiveStateLock)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
+
+//ActiveStateLock
+//true
+// ActiveStateFunction 발동했을 때
+// false
+// 그 이외
+// 
+// isChangeShotData
+//
 
 void UGameInstanceData::ActiveStateFunction()
 {
 	if (false == this->m_bActiveStateLock)
 	{
 		this->m_bActiveStateLock = true;
-		this->m_bActiveState = false;
+		//this->m_bActiveState = false;
 	}
 	else
 	{
 		this->m_bActiveStateLock = false;
-		CheckActiveState();
 	}
 }
