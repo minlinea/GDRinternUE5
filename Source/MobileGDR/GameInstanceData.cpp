@@ -60,21 +60,11 @@ bool UGameInstanceData::CheckActiveState()
 	}
 }
 
-//ActiveStateLock
-//true
-// ActiveStateFunction 발동했을 때
-// false
-// 그 이외
-// 
-// isChangeShotData
-//
-
 void UGameInstanceData::ActiveStateFunction()
 {
 	if (false == this->m_bActiveStateLock)
 	{
 		this->m_bActiveStateLock = true;
-		//this->m_bActiveState = false;
 	}
 	else
 	{

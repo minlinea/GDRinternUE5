@@ -90,26 +90,33 @@ void ADataManagement::ManageData(Packet* pt)
 
 bool ADataManagement::ConnectServer()
 {
-	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
-
-	FIPv4Address ip;
-	FIPv4Address::Parse(this->m_sServerAddress, ip);
-
-	TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)
-		->CreateInternetAddr(ip.Value, this->m_iServerPort);
-
-	if (true == this->m_sSocket->Connect(*addr))
+	if (false == isConnected())
 	{
-		MakeThread();			//Send, Recv스레드 생성
+		this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 
-		/*GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,
-			FString::Printf(TEXT("Connect OK")), true, FVector2D{ 2.f, 2.f });*/
-		return true;
+		FIPv4Address ip;
+		FIPv4Address::Parse(this->m_sServerAddress, ip);
+
+		TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)
+			->CreateInternetAddr(ip.Value, this->m_iServerPort);
+
+		if (true == this->m_sSocket->Connect(*addr))
+		{
+			MakeThread();			//Send, Recv스레드 생성
+
+			/*GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red,
+				FString::Printf(TEXT("Connect OK")), true, FVector2D{ 2.f, 2.f });*/
+			return true;
+		}
+		else
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+			//	FString::Printf(TEXT("Connect Fail")), true, FVector2D{ 2.f, 2.f });
+			return false;
+		}
 	}
 	else
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		//	FString::Printf(TEXT("Connect Fail")), true, FVector2D{ 2.f, 2.f });
 		return false;
 	}
 }
@@ -179,6 +186,6 @@ void ADataManagement::SendPacket(const FString& type)
 		PushSendQueue<PacketActiveState>(GIdata->GetActiveState());
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		FString::Printf(TEXT("%s"), *type), true, FVector2D{ 2.f, 2.f });
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+	//	FString::Printf(TEXT("%s"), *type), true, FVector2D{ 2.f, 2.f });
 }
