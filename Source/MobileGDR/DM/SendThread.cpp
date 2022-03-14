@@ -50,34 +50,42 @@ uint32 SendThread::Run()
 	Packet pt;
 	while (true == this->m_bRun)
 	{
-		if (true != this->m_qPacket.empty())
-		{
-			auto queuepacket = this->m_qPacket;
-			for (auto packet = queuepacket.front(); true != queuepacket.empty(); )
-			{
-				packet = queuepacket.front();
+		//if (true != this->m_qPacket.empty())
+		//{
+		//	auto queuepacket = this->m_qPacket;
+		//	for (auto packet = queuepacket.front(); true != queuepacket.empty(); )
+		//	{
+		//		packet = queuepacket.front();
 
+		//		if (false == ClientSend(packet))
+		//		{
+		//			/*GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
+		//				FString::Printf(TEXT("Error SendThread ClientSend")), true, FVector2D{ 2.f, 2.f });*/
+
+		//			//Exit();
+		//			break;
+		//		}
+
+		//		delete packet;
+		//		queuepacket.pop();
+		//	}
+		//	this->m_qPacket = queuepacket;
+		//}
+
+		if (false == this->m_qPacket.empty())
+		{
+			for (auto packet = this->m_qPacket.front(); false == this->m_qPacket.empty(); )
+			{
+				packet = this->m_qPacket.front();
 				if (false == ClientSend(packet))
 				{
-					/*GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-						FString::Printf(TEXT("Error SendThread ClientSend")), true, FVector2D{ 2.f, 2.f });*/
-
-					//Exit();
 					break;
 				}
 				delete packet;
-				queuepacket.pop();
+				this->m_qPacket.pop();
 			}
-			this->m_qPacket = queuepacket;
 		}
-		//if (SCS_ConnectionError == this->m_sSocket->GetConnectionState())
-		//{
-		//	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		//		FString::Printf(TEXT("SendThread SCS_ConnectionError")), true, FVector2D{ 2.f, 2.f });
-		//	this->m_bRun = false;
-		//}
 	}
-	//Exit();
 	return 0;
 }
 

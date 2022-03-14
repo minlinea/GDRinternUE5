@@ -12,7 +12,7 @@ ADataManagement::ADataManagement()
 
 	this->m_sServerAddress = TEXT("192.168.245.130");
 	this->m_iServerPort = PORT;
-	this->m_sSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
+	this->m_sSocket = nullptr;
 	this->m_tSend = nullptr;
 	this->m_tRecv = nullptr;
 }
@@ -123,7 +123,10 @@ bool ADataManagement::ConnectServer()
 
 void ADataManagement::DisconnectServer()
 {	
-	this->m_sSocket->Close();
+	if (nullptr != this->m_sSocket)
+	{
+		this->m_sSocket->Close();
+	}
 	
 	if (nullptr != this->m_tSend)
 	{
@@ -187,5 +190,5 @@ void ADataManagement::SendPacket(const FString& type)
 	}
 
 	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-	//	FString::Printf(TEXT("%s"), *type), true, FVector2D{ 2.f, 2.f });
+	//	FString::Printf(TEXT("SendPacket PushSendQueue %s"), *type), true, FVector2D{ 2.f, 2.f });
 }
