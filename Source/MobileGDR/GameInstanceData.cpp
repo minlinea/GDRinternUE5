@@ -31,17 +31,6 @@ bool UGameInstanceData::CheckActiveState()
 				this->m_bActiveState = false;
 			}
 		}
-		else if (CLUBSETTING::PUTTER == this->m_eClub)
-		{
-			if (BALLPLACE::GREEN == this->m_eBallPlace)
-			{
-				this->m_bActiveState = true;
-			}
-			else
-			{
-				this->m_bActiveState = false;
-			}
-		}
 		else
 		{
 			std::vector<BALLPLACE> possible = { BALLPLACE::FAIRWAY, BALLPLACE::ROUGH, BALLPLACE::BUNKER };
