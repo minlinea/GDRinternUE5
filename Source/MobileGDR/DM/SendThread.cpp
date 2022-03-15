@@ -40,14 +40,10 @@ void SendThread::Exit()
 			this->m_qPacket.pop();
 		}
 	}
-
-	//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
-	//	FString::Printf(TEXT("SendThread Exit")), true, FVector2D{ 2.f, 2.f });
 }
 
 uint32 SendThread::Run()
 {
-	Packet pt;
 	while (true == this->m_bRun)
 	{
 		if (false == this->m_qPacket.empty())
@@ -59,6 +55,8 @@ uint32 SendThread::Run()
 				{
 					break;
 				}
+				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red,
+					FString::Printf(TEXT("SendThread Run %s"), *FString(to_string(packet->GetType()))), true, FVector2D{ 2.f, 2.f });
 				delete packet;
 				this->m_qPacket.pop();
 			}

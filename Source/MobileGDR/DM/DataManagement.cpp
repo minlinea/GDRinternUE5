@@ -189,6 +189,6 @@ void ADataManagement::SendPacket(const FString& type)
 		PushSendQueue<PacketActiveState>(GIdata->GetActiveState());
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red,
-		FString::Printf(TEXT("SendPacket PushSendQueue %s"), *type), true, FVector2D{ 2.f, 2.f });
+	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue,
+	//	FString::Printf(TEXT("SendPacket PushSendQueue %s"), *type), true, FVector2D{ 2.f, 2.f });
 }
