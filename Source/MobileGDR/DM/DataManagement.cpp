@@ -69,6 +69,7 @@ void ADataManagement::ManageData(Packet* pt)
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
 		GIdata->SetShotData(static_cast<PacketShotDataInfo*>(pt)->GetData());
+		ShotDataInfo sdi = GIdata->GetShotData();
 
 		PushSendQueue<Packet>(PACKETTYPE::PT_ShotDataRecv);
 	}
@@ -83,8 +84,7 @@ void ADataManagement::ManageData(Packet* pt)
 	}
 	else if (PACKETTYPE::PT_ConnectCheck == pt->GetType())
 	{
-		/*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-			FString::Printf(TEXT("Connect Check")), true, FVector2D{ 2.f, 2.f });*/
+		
 	}
 }
 
@@ -121,25 +121,34 @@ bool ADataManagement::ConnectServer()
 	}
 }
 
-void ADataManagement::DisconnectServer()
+/*
+* 소켓의 연결 여부를 통해 판단
+* return true	: 연결되어 있던 상태에서의 접속 종료 요청 -> 연결 끊는 동작 수행(소켓, 스레드)
+* return false	: 연결되어 있지 않던 상태에서의 접속 종료 요청 -> 아무것도 하지 않음
+*/
+bool ADataManagement::DisconnectServer()
 {	
 	if (nullptr != this->m_sSocket)
 	{
 		this->m_sSocket->Close();
-	}
-	
-	if (nullptr != this->m_tSend)
-	{
-		this->m_tSend->Exit();
-		this->m_tSend = nullptr;
-	}
+		this->m_sSocket = nullptr;
 
-	if (nullptr != this->m_tRecv)
-	{
-		this->m_tRecv->Exit();
-		this->m_tRecv = nullptr;
+		if (nullptr != this->m_tRecv)
+		{
+			this->m_tRecv->Exit();
+			this->m_tRecv = nullptr;
+		}
+		if (nullptr != this->m_tSend)
+		{
+			this->m_tSend->Exit();
+			this->m_tSend = nullptr;
+		}
+		return true;
 	}
-
+	else
+	{
+		return false;
+	}
 }
 
 bool ADataManagement::isConnected()

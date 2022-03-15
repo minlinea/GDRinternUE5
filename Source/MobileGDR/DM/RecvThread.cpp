@@ -111,6 +111,7 @@ void RecvThread::Exit()
 			this->m_qPacket.pop();
 		}
 	}
+	this->m_sSocket = nullptr;
 }
 
 void RecvThread::Stop()

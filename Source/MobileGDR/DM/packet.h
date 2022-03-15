@@ -146,32 +146,6 @@ typedef struct _ShotDataInfo {
 	float clubspeed;
 	float clubpath;
 	float clubface;
-
-	//_ShotDataInfo()
-	//{
-	//	this->phase = 0;
-	//	this->ballspeed = 0.f;
-	//	this->ballpitch = 0.f;
-	//	this->ballyaw = 0.f;
-	//	this->spinback = 0;
-	//	this->spinside = 0;
-	//	this->clubspeed = 0.f;
-	//	this->clubpath = 0.f;
-	//	this->clubface = 0.f;
-	//}
-
-	//_ShotDataInfo(const _ShotDataInfo& sd)
-	//{
-	//	this->phase = sd.phase;
-	//	this->ballpitch = sd.ballpitch;
-	//	this->ballspeed = sd.ballspeed;
-	//	this->ballyaw = sd.ballyaw;
-	//	this->spinback = sd.spinback;
-	//	this->spinside = sd.spinside;
-	//	this->clubface = sd.clubface;
-	//	this->clubpath = sd.clubpath;
-	//	this->clubspeed = sd.clubspeed;
-	//}
 }ShotDataInfo;
 
 

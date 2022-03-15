@@ -23,14 +23,19 @@ public:
 	ADataManagement();
 	~ADataManagement();
 
+
+
+	UFUNCTION(BlueprintCallable)
+	bool ConnectServer();
+
 	/*
-	* socket 생성, ip parsing, connect
-	* 현재 모바일 빌드 시에 SCS_NotConnected가 통과되지 않는 문제가 있음
+	* 소켓의 연결 여부를 통해 판단
+	* return true	: 연결되어 있던 상태에서의 접속 종료 요청 -> 연결 끊는 동작 수행(소켓, 스레드)
+	* return false	: 연결되어 있지 않던 상태에서의 접속 종료 요청 -> 아무것도 하지 않음
 	*/
 	UFUNCTION(BlueprintCallable)
-	bool ConnectServer();		
-	UFUNCTION(BlueprintCallable)
-	void DisconnectServer();
+	bool DisconnectServer();
+
 	UFUNCTION(BlueprintCallable)
 	bool isConnected();
 
