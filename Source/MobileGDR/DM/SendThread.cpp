@@ -55,8 +55,6 @@ uint32 SendThread::Run()
 				{
 					break;
 				}
-				//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red,
-				//	FString::Printf(TEXT("SendThread Run %s"), *FString(to_string(packet->GetType()))), true, FVector2D{ 2.f, 2.f });
 				delete packet;
 				this->m_qPacket.pop();
 			}

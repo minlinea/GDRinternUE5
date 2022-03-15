@@ -14,7 +14,9 @@ void UGameInstanceData::Init()
 	this->m_eClub = CLUBSETTING::DRIVER;
 	this->m_bActiveStateLock = false;
 }
-
+/*
+*	
+*/
 bool UGameInstanceData::CheckActiveState()
 {
 	bool check = this->m_bActiveState;

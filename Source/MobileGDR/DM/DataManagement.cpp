@@ -70,7 +70,6 @@ void ADataManagement::ManageData(Packet* pt)
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
 		GIdata->SetShotData(static_cast<PacketShotDataInfo*>(pt)->GetData());
-		ShotDataInfo sdi = GIdata->GetShotData();
 
 		PushSendQueue<Packet>(PACKETTYPE::PT_ShotDataRecv);
 	}

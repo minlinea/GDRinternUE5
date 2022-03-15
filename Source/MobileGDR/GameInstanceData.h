@@ -23,8 +23,6 @@ class MOBILEGDR_API UGameInstanceData : public UGameInstance
 	TEESETTING m_eTee;
 	CLUBSETTING m_eClub;
 	
-
-
 	virtual void Init() override;
 
 
@@ -33,7 +31,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ActiveStateFunction();
-
 
 	//return : CheckActiveState를 통해 m_bActiveState가 바뀌었다면 true
 	UFUNCTION(BlueprintCallable)
@@ -54,39 +51,18 @@ public:
 	{
 		this->m_sdShotData = sd;
 	}
-	void SetShotData(uint8* sd)
-	{
-		FMemory::Memmove(&m_sdShotData, sd, sizeof(ShotDataInfo));
-	}
 	void SetTeeSetting(const TEESETTING& tee)
 	{
 		this->m_eTee = tee;
-	}
-	void SetTeeSetting(uint8* tee)
-	{
-		FMemory::Memmove(&m_eTee, tee, sizeof(TEESETTING));
 	}
 	void SetClubSetting(const CLUBSETTING& club)
 	{
 		this->m_eClub = club;
 	}
-	void SetClubSetting(uint8* club)
-	{
-		FMemory::Memmove(&m_eClub, club, sizeof(CLUBSETTING));
-	}
 	void SetBallPlace(const BALLPLACE& place)
 	{
 		this->m_eBallPlace = place;
 	}
-	void SetBallPlace(uint8* ballplace)
-	{
-		FMemory::Memmove(&m_eBallPlace, ballplace, sizeof(BALLPLACE));
-	}
-	void SetActiveState(uint8* activestate)
-	{
-		FMemory::Memmove(&m_bActiveState, activestate, sizeof(bool));
-	}
-
 
 	const TEESETTING GetTeeSetting()
 	{

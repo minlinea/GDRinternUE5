@@ -19,11 +19,11 @@ inline const char* to_string(const bool& t)
 {
 	if (true == t)
 	{
-		return "Ready";	//준비, 가능은 에러가 남
+		return "Ready";
 	}
 	else
 	{
-		return "Wait";	//대기 가능
+		return "Wait";
 	}
 }
 
