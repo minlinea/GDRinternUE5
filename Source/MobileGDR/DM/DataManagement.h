@@ -72,6 +72,8 @@ private:
 		FString m_sServerAddress;
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		int32 m_iServerPort;
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		bool m_bUpdate;
 	FSocket* m_sSocket;
 
 	SendThread* m_tSend;

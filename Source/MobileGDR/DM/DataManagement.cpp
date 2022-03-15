@@ -60,6 +60,7 @@ void ADataManagement::CheckQueue()
 
 void ADataManagement::ManageData(Packet* pt)
 {
+	this->m_bUpdate = true;
 	if (PACKETTYPE::PT_BallPlace == pt->GetType())
 	{
 		GIdata->SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
@@ -84,7 +85,7 @@ void ADataManagement::ManageData(Packet* pt)
 	}
 	else if (PACKETTYPE::PT_ConnectCheck == pt->GetType())
 	{
-		
+		this->m_bUpdate = false;
 	}
 }
 
@@ -179,7 +180,11 @@ void ADataManagement::MakeThread()
 	FRunnableThread::Create(this->m_tRecv, TEXT("RecvThread"));
 
 	GIdata->SetBallPlace(BALLPLACE::OUTOFBOUND);
+	SendPacket("ClubSetting");
+	SendPacket("TeeSetting");
+	SendPacket("ActiveState");
 }
+
 
 
 void ADataManagement::SendPacket(const FString& type)
