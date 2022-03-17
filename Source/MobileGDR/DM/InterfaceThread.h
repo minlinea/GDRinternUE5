@@ -8,8 +8,11 @@
 #include <queue>
 #include "HAL/Runnable.h"
 #include "HAL/RunnableThread.h"
+
 /**
- * 
+ * 언리얼의 스레드인 FRunnable을 상속받는 InterfaceThread
+ * FRunnable에서 필수로 정의해야 하는 함수[Init, Run, Exit, Stop]
+ * Send, Recv에서 동시에 필요한 기능, 인자 정의
  */
 class MOBILEGDR_API InterfaceThread : public FRunnable
 {

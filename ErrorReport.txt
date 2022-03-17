@@ -1,0 +1,17 @@
+RunGradle.bat :app:assembleDebug 에러
+
+안드로이드 빌드 환경설정
+sdk : C:\Users\(사용자이름)\AppData\Local\Android\Sdk
+ndk : 21.4.7075529		C:\Users\(사용자이름)\AppData\Local\Android\Sdk\ndk
+jdk : 18u202 (jdk1.8.0_202)	C:\Program Files\Java
+
+원인 : Android sdk의 build-tools버전이 31버전 이상인 경우 발생
+	- 언리얼 엔진에서는 안드로이드 빌드 시 RunGradle.bat을 통해 dx.bat을 실행하게 된다.
+	29버전까지는 문제가 없으나 31버전 이상의 경우 dx.bat가 d8.bat로 변경되어 dx.bat를 찾을 수가 없어 에러가 발생한다.
+	
+해결책 (2022-03-17 기준)
+1. Build-tools 버전을 고정하는 인자 설정 (인자를 어디서 선언해야 하는지 못 찾음)
+2. Android sdk의 build-tools의 최대 버전을 30.0.3버전 이하만 설치
+	- 기본적으로 Android 빌드는 sdk의 build-tools 안에 있는 버전 중에서 가장 높은 버전을 타겟으로 하여 빌드하게 된다.
+	2022-03-17 기준으로 실행 가능한 가장 높은 버전 중 30.0.3버전이며, 가급적 29버전을 권장한다. 이외의 버전은 삭제한다.
+	(30버전의 경우 dx.bat, d8.bat이 같이 들어있으며, 빌드 시 자동으로 29버전을 설치해준다.)
