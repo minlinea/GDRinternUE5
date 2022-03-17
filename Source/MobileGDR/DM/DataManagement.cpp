@@ -61,6 +61,8 @@ void ADataManagement::CheckQueue()
 void ADataManagement::ManageData(Packet* pt)
 {
 	this->m_bUpdate = true;
+	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue,
+	//	FString::Printf(TEXT("SendPacket PushSendQueue %s"), *FString(to_string(pt->GetType()))), true, FVector2D{ 2.f, 2.f });
 	if (PACKETTYPE::PT_BallPlace == pt->GetType())
 	{
 		GIdata->SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
@@ -82,7 +84,8 @@ void ADataManagement::ManageData(Packet* pt)
 
 		PushSendQueue<Packet>(PACKETTYPE::PT_ActiveStateRecv);
 	}
-	else if (PACKETTYPE::PT_ConnectCheck == pt->GetType())
+	//else if (PACKETTYPE::PT_ConnectCheck == pt->GetType())
+	else
 	{
 		this->m_bUpdate = false;
 	}
