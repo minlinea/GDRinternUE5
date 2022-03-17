@@ -77,6 +77,7 @@ bool SendThread::ClientSend(Packet* packet)
 
 	FMemory::Memmove(senddata, packet, sendsize);
 
+	//Send함수인자((uint8*)buf:보낼 데이터가 담긴 버퍼, size:버퍼의 최대 사이즈, size:버퍼에 보낼 것으로 기대되는 사이즈)
 	bool result = this->m_sSocket->Send((uint8*)senddata, sendsize, sendsize);
 
 	FMemory::Free(senddata);

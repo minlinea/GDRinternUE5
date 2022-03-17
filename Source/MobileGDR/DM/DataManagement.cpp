@@ -36,14 +36,16 @@ void ADataManagement::Tick(float DeltaTime)
 	CheckQueue();
 }
 
-//RecvThread에 담긴 큐 데이터 처리
+/*
+*	RecvThread에 담긴 큐 데이터 처리
+*/
 void ADataManagement::CheckQueue()
 {
 	if (nullptr != this->m_tSend)
 	{
-		if (0 != this->m_tRecv->GetQueue().size())
+		if (false == this->m_tRecv->GetQueue().empty())		//무언가가 담겨있는 경우(패킷을 recv한 경우)
 		{
-			auto packetqueue = this->m_tRecv->GetQueue();
+			auto packetqueue = this->m_tRecv->GetQueue();	//Recv 큐 복사
 			for (auto packet = packetqueue.front(); true != packetqueue.empty(); )
 			{
 				packet = packetqueue.front();
@@ -53,7 +55,7 @@ void ADataManagement::CheckQueue()
 				delete packet;
 				packetqueue.pop();
 			}
-			this->m_tRecv->SetQueue(packetqueue);
+			this->m_tRecv->SetQueue(packetqueue);			//Recv 큐 설정
 		}
 	}
 }
@@ -71,7 +73,7 @@ void ADataManagement::ManageData(Packet* pt)
 	{
 		GIdata->SetBallPlace(static_cast<PacketBallPlace*>(pt)->GetData());
 
-		PushSendQueue<Packet>(PACKETTYPE::PT_BallPlaceRecv);
+		PushSendQueue<Packet>(PACKETTYPE::PT_BallPlaceRecv);	//Send 스레드 큐에 recv 패킷 추가
 	}
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
@@ -79,23 +81,24 @@ void ADataManagement::ManageData(Packet* pt)
 
 		PushSendQueue<Packet>(PACKETTYPE::PT_ShotDataRecv);
 	}
-	else if (PACKETTYPE::PT_ActiveState == pt->GetType())
+	else if (PACKETTYPE::PT_ActiveState == pt->GetType())		//Send 스레드 큐에 recv 패킷 추가
 	{
 		GIdata->SetActiveState(static_cast<PacketActiveState*>(pt)->GetData());
 
 		GIdata->ActiveStateFunction();		//UGameInstanceData m_bActiveStateLock 스위치 함수 호출
 		GetWorldTimerManager().SetTimer(GIdata->m_hActiveStateTimer, GIdata, &UGameInstanceData::ActiveStateFunction, 1.0f, false, 3.0f);	//3초 뒤에 해당 함수 호출
 
-		PushSendQueue<Packet>(PACKETTYPE::PT_ActiveStateRecv);
+		PushSendQueue<Packet>(PACKETTYPE::PT_ActiveStateRecv);	//Send 스레드 큐에 recv 패킷 추가
 	}
 	else
 	{
-		this->m_bUpdate = false;
+		this->m_bUpdate = false;	//UI Update가 필요없는 타입의 패킷인 경우
 	}
 }
 
 /*
 *	언리얼 내에서 지원하는 TCP 통신 연결 함수
+*	Connect 성공 시 true 리턴
 */
 bool ADataManagement::ConnectServer()
 {
@@ -135,7 +138,7 @@ bool ADataManagement::ConnectServer()
 */
 bool ADataManagement::DisconnectServer()
 {	
-	if (nullptr != this->m_sSocket)
+	if (nullptr != this->m_sSocket)		//Socket이 nullptr라면 아래의 동작이 수행되지 않음
 	{
 		this->m_sSocket->Close();
 		this->m_sSocket = nullptr;
@@ -200,7 +203,10 @@ void ADataManagement::MakeThread()
 }
 
 
-
+/*
+*	BP에서 사용하는 패킷 전달 함수, type을 통해 구분
+*	SendThread 큐에 보낼 패킷 추가
+*/
 void ADataManagement::SendPacket(const FString& type)
 {
 	if (FString("ClubSetting") == type)
@@ -215,9 +221,9 @@ void ADataManagement::SendPacket(const FString& type)
 	{
 		PushSendQueue<PacketActiveState>(GIdata->GetActiveState());
 	}
-	else
+	else	//정의되어 있지 않은 타입
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red,
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow,
 			FString::Printf(TEXT("SendPacket Input UnknownType %s"), *type), true, FVector2D{ 2.f, 2.f });
 	}
 }

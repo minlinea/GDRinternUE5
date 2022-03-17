@@ -36,6 +36,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool DisconnectServer();
 
+	/*
+	*	서버와의 접속 여부 확인
+	*	true 조건 : Recv 스레드가 동작 중인 경우
+	*/
 	UFUNCTION(BlueprintCallable)
 	bool isConnected();
 
