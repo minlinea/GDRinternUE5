@@ -1,0 +1,21 @@
+Windows 10
+Unreal Engine 5.0.0 얼리 액세스1
+Visual Studio 2019
+
+타깃 기기 : Galaxy Tab S7 FE
+
+프로젝트 세팅 - 플랫폼 - Android SDK
+Android sdk : 			C:\Users\(사용자이름)\AppData\Local\Android\Sdk
+Android ndk : 21.4.7075529		C:\Users\(사용자이름)\AppData\Local\Android\Sdk\ndk
+JAVA : jdk1.8.0_202(18u202) 		C:\Program Files\Java
+
+
+Android build를 위한 추가 설치 필요 파일
+Android Studio : [Tools -> SDK Manager]를 사용하여 SDK platform, Tools 설치용, 아래 내용들이 여기에서 설치됨
+**********	- Android SDK Build-Tools : [30.0.3] 반드시 30버전 아래로 설치하고 상위 버전은 지울 것. 31버전 이상 설치 시 ErrorReport.txt와 같은 문제가 발생하게 됨
+	- NDK(Side by side) : [21.4.7075529] NDK는 버전과 관련한 에러는 발생하지 않았음
+	- Android SDK Command-line Tools
+	- CMake
+	- Android SDK Platform-Tools
+flutter : 안드로이드 빌드 시 필요 요소들에 대한 점검을 해주는 프로그램, 최초 안드로이드 설치 시 동의해야 할 라이센스 문제 해결 가능
+	- 일반 프로그램 링크로 다운로드가 불가능하여 git 사용 필요

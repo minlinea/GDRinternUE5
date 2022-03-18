@@ -5,9 +5,6 @@
 #include <algorithm>
 //////////////////////////////////////////////////////////////////////////////////
 // define
-
-#define SERVER_IP "192.168.206.126"
-#define PORT 8989
 #define PACKETHEADER sizeof(Packet)
 
 
@@ -152,9 +149,9 @@ typedef struct _ShotDataInfo {
 
 
 /*
-Packet
-type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분
-size : 해당 타입 패킷의 사이즈
+*	Packet
+*	type : PACKETTYPE, 어떤 패킷이 넘어왔는지 구분
+*	size : 해당 타입 패킷의 사이즈
 */
 
 class Packet

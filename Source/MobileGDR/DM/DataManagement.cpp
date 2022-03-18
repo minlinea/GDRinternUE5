@@ -11,7 +11,7 @@ ADataManagement::ADataManagement()
 	PrimaryActorTick.bCanEverTick = true;
 
 	this->m_sServerAddress = TEXT("192.168.245.130");
-	this->m_iServerPort = PORT;
+	this->m_iServerPort = 8989;
 	this->m_sSocket = nullptr;
 	this->m_tSend = nullptr;
 	this->m_tRecv = nullptr;
