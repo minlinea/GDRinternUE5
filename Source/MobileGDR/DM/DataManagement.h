@@ -13,6 +13,11 @@
 #include "SocketSubsystem.h"
 #include "DataManagement.generated.h"
 
+#define PORT 8989
+/*
+*	TCP 통신 담당 클래스
+*	TCP 연결 로직, Send, Recv 스레드 소유
+*/
 UCLASS()
 class MOBILEGDR_API ADataManagement : public AActor
 {

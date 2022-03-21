@@ -34,6 +34,9 @@ bool RecvThread::Init()
 	return true;
 };
 
+/*
+*	Create 이후 Run을 통해 스레드를 진행
+*/
 uint32 RecvThread::Run()
 {
 	Packet pt;

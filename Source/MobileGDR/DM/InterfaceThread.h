@@ -13,6 +13,11 @@
  * 언리얼의 스레드인 FRunnable을 상속받는 InterfaceThread
  * FRunnable에서 필수로 정의해야 하는 함수[Init, Run, Exit, Stop]
  * Send, Recv에서 동시에 필요한 기능, 인자 정의
+ * 
+ * Init : 최초 생성(Create) 함수 호출 시 사용
+ * Run : 생성 함수 호출 이후 Run으로 진행
+ * Stop : 스레드 일시 정지
+ * Exit : 스레드 종료
  */
 class MOBILEGDR_API InterfaceThread : public FRunnable
 {

@@ -8,7 +8,10 @@
 #include "GameInstanceData.generated.h"
 
 /**
+ * MobileGDR의 GameInstance
+ * 게임 시작 버튼 시 생성이 이루어지며, 초기화 한 뒤 프로그램 종료까지 데이터 저장
  * 
+ * Init : UGameInstance에서 생성 시 호출되는 함수 (기본 값 정의)
  */
 UCLASS()
 class MOBILEGDR_API UGameInstanceData : public UGameInstance
