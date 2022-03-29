@@ -28,6 +28,7 @@ class MOBILEGDR_API UGameInstanceData : public UGameInstance
 	
 	virtual void Init() override;
 
+	bool m_bShotDataUpdate;
 
 public:
 	FTimerHandle m_hActiveStateTimer;
@@ -38,6 +39,17 @@ public:
 	//return : CheckActiveState를 통해 m_bActiveState가 바뀌었다면 true
 	UFUNCTION(BlueprintCallable)
 	bool CheckActiveState();
+
+	UFUNCTION(BlueprintPure)
+	bool GetShotDataUpdate()
+	{
+		return this->m_bShotDataUpdate;
+	}
+	UFUNCTION(BlueprintCallable)
+	void SetShotDataUpdate(const bool& shotdataupdate)
+	{
+		this->m_bShotDataUpdate = shotdataupdate;
+	}
 
 	UFUNCTION(BlueprintPure)
 	bool GetActiveStateLock()

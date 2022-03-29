@@ -15,6 +15,8 @@ ADataManagement::ADataManagement()
 	this->m_sSocket = nullptr;
 	this->m_tSend = nullptr;
 	this->m_tRecv = nullptr;
+
+	//UGameViewportClient tp;
 }
 
 ADataManagement::~ADataManagement()
@@ -78,6 +80,8 @@ void ADataManagement::ManageData(Packet* pt)
 	else if (PACKETTYPE::PT_ShotData == pt->GetType())
 	{
 		GIdata->SetShotData(static_cast<PacketShotDataInfo*>(pt)->GetData());
+
+		GIdata->SetShotDataUpdate(false);
 
 		PushSendQueue<Packet>(PACKETTYPE::PT_ShotDataRecv);
 	}

@@ -15,6 +15,8 @@ void UGameInstanceData::Init()
 	this->m_eTee = TEESETTING::T25;
 	this->m_eClub = CLUBSETTING::DRIVER;
 
+	this->m_bShotDataUpdate = false;
+
 }
 
 /*
